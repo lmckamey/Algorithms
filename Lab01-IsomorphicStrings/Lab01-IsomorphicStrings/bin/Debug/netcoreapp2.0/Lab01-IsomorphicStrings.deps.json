@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.0",
+    "signature": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.0": {
+      "Lab01-IsomorphicStrings/1.0.0": {
+        "runtime": {
+          "Lab01-IsomorphicStrings.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Lab01-IsomorphicStrings/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
