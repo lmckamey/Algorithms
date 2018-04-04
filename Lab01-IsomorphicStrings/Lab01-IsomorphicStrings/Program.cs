@@ -3,10 +3,16 @@ using System.Collections.Generic;
 
 namespace Lab01_IsomorphicStrings
 {
+    struct Word
+    {
+        public string BaseString;
+        public string LooseCode;
+        public string ExactCode;
+    }
     class Program
     {
 
-        private static string[] strings;
+        static List<Word> words = new List<Word>();
 
         static List<String> isomorphicExactList = new List<string>();
         static List<String> isomorphicLooseList = new List<string>();
@@ -27,16 +33,44 @@ namespace Lab01_IsomorphicStrings
 
         static void OpenFile(string path)
         {
-            strings = System.IO.File.ReadAllLines(path);  
+            string[] strings;
+            strings = System.IO.File.ReadAllLines(path);
+
+            PutWordsIntoList(strings);
+        }
+
+        static void PutWordsIntoList(string[] strings)
+        {
+            for (int i = 0; i < strings.Length; i++)
+            {
+                Word w = new Word();
+                w.BaseString = strings[i];
+                words.Add(w);
+            }
+        }
+
+        static void determineExactCode()
+        {
+            //determines the occurences of letters in exact order i.e Word: moo Code: 011 or Word: Sad Code: 012
+        }
+        static void determineLooseCode()
+        {
+            //determines the occurences of letters in assending order i.e Word: moo Code: 12 or Word: Sad Code: 111
+            foreach (Word item in words)
+            {
+                int[] ints;
+                char[] charactersInString;
+
+            }
+
         }
 
         static void printAllStringsInList()
         {
-            for (int i = 0; i < strings.Length; i++)
+            foreach (var item in words)
             {
-                Console.WriteLine(strings[i]);
+                Console.WriteLine(item.BaseString);
             }
-            
         }
     }
 }
