@@ -9,3 +9,14 @@ C:\Users\Lucas\Documents\Repositories\Algorithms\Lab01-IsomorphicStrings\Lab01-I
 C:\Users\Lucas\Documents\Repositories\Algorithms\Lab01-IsomorphicStrings\Lab01-IsomorphicStrings\obj\Debug\netcoreapp2.0\Lab01-IsomorphicStrings.AssemblyInfo.cs
 C:\Users\Lucas\Documents\Repositories\Algorithms\Lab01-IsomorphicStrings\Lab01-IsomorphicStrings\obj\Debug\netcoreapp2.0\Lab01-IsomorphicStrings.dll
 C:\Users\Lucas\Documents\Repositories\Algorithms\Lab01-IsomorphicStrings\Lab01-IsomorphicStrings\obj\Debug\netcoreapp2.0\Lab01-IsomorphicStrings.pdb
+C:\Users\Lucas\Documents\Repos\Algorithms\Lab01-IsomorphicStrings\Lab01-IsomorphicStrings\bin\Debug\netcoreapp2.0\Lab01-IsomorphicStrings.deps.json
+C:\Users\Lucas\Documents\Repos\Algorithms\Lab01-IsomorphicStrings\Lab01-IsomorphicStrings\bin\Debug\netcoreapp2.0\Lab01-IsomorphicStrings.runtimeconfig.json
+C:\Users\Lucas\Documents\Repos\Algorithms\Lab01-IsomorphicStrings\Lab01-IsomorphicStrings\bin\Debug\netcoreapp2.0\Lab01-IsomorphicStrings.runtimeconfig.dev.json
+C:\Users\Lucas\Documents\Repos\Algorithms\Lab01-IsomorphicStrings\Lab01-IsomorphicStrings\bin\Debug\netcoreapp2.0\Lab01-IsomorphicStrings.dll
+C:\Users\Lucas\Documents\Repos\Algorithms\Lab01-IsomorphicStrings\Lab01-IsomorphicStrings\bin\Debug\netcoreapp2.0\Lab01-IsomorphicStrings.pdb
+C:\Users\Lucas\Documents\Repos\Algorithms\Lab01-IsomorphicStrings\Lab01-IsomorphicStrings\obj\Debug\netcoreapp2.0\Lab01-IsomorphicStrings.csprojResolveAssemblyReference.cache
+C:\Users\Lucas\Documents\Repos\Algorithms\Lab01-IsomorphicStrings\Lab01-IsomorphicStrings\obj\Debug\netcoreapp2.0\Lab01-IsomorphicStrings.csproj.CoreCompileInputs.cache
+C:\Users\Lucas\Documents\Repos\Algorithms\Lab01-IsomorphicStrings\Lab01-IsomorphicStrings\obj\Debug\netcoreapp2.0\Lab01-IsomorphicStrings.AssemblyInfoInputs.cache
+C:\Users\Lucas\Documents\Repos\Algorithms\Lab01-IsomorphicStrings\Lab01-IsomorphicStrings\obj\Debug\netcoreapp2.0\Lab01-IsomorphicStrings.AssemblyInfo.cs
+C:\Users\Lucas\Documents\Repos\Algorithms\Lab01-IsomorphicStrings\Lab01-IsomorphicStrings\obj\Debug\netcoreapp2.0\Lab01-IsomorphicStrings.dll
+C:\Users\Lucas\Documents\Repos\Algorithms\Lab01-IsomorphicStrings\Lab01-IsomorphicStrings\obj\Debug\netcoreapp2.0\Lab01-IsomorphicStrings.pdb
