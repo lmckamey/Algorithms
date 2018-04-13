@@ -20,10 +20,51 @@ namespace Lab01_IsomorphicStrings
     class Program
     {
 
+        //public static int[] generateRandomArray(int size)
+        //{
+        //    int[] temp = new int[size];
+        //    for (int i = 0; i < temp.Length; i++)
+        //    {
+        //        Random randy = new Random();
+        //        temp[i] = randy.Next(10);
+        //    }
+        //    return temp;
+        //}
+        //public static void Main(string[] args)
+        //{
+        //    int[] randomArray = generateRandomArray(8);
+        //    foreach (var item in randomArray)
+        //    {
+        //        Console.Write(item + ", ");
+        //    }
+        //    SortingTest(randomArray);
+        //}
+
+        //public static void SortingTest(int[] array)
+        //{
+        //    int[] temp = array;
+        //    int max = temp[0];
+        //    int min = temp[0];
+        //    int average = 0;
+        //    for (int i = 0; i < temp.Length; i++)
+        //    {
+        //        if (temp[i] > max) max = temp[i];
+        //        if (temp[i] < min) min = temp[i];
+        //        average += temp[i];
+        //    }
+        //    average = average / temp.Length;
+
+        //    Console.WriteLine("\nMax: " + max);
+        //    Console.WriteLine("Min: " + min);
+        //    Console.WriteLine("Average: " + average);
+
+        //}
+
+
         static List<Word> words = new List<Word>();
 
         static Dictionary<string, List<Word>> isomorphicExactList = new Dictionary<string, List<Word>>();
-        static Dictionary<string, List<Word>> isomorphicLooseList = new Dictionary<string,List<Word>>();
+        static Dictionary<string, List<Word>> isomorphicLooseList = new Dictionary<string, List<Word>>();
         static List<Word> nonisomorphicList = new List<Word>();
 
         static void Main(string[] args)
@@ -35,27 +76,33 @@ namespace Lab01_IsomorphicStrings
         {
             Console.WriteLine("Welcome!");
             Console.WriteLine("Please enter a file path: ");
-            OpenFile(Console.ReadLine());
-            PrintAllStringsInList();
+            if (OpenFile(Console.ReadLine()))
+            {
+                Run();
+            }
+        }
 
-            Console.WriteLine("EXACT CODE\n\n");
+        static void Run()
+        {
             DetermineExactCode();
-            Console.WriteLine("LOOSE CODE\n\n");
             DetermineLooseCode();
-            Console.WriteLine("DETERMINE EXACTS ISOS\n\n");
             DetermineExactIsomorphs();
-            Console.WriteLine("DETERMINE LOOSE ISOS\n\n");
             DetermineLooseIsomorphs();
             CleanNonIsomorphList();
             printLists();
         }
 
-        static void OpenFile(string path)
+        static bool OpenFile(string path)
         {
             string[] strings;
             strings = System.IO.File.ReadAllLines(path);
 
-            PutWordsIntoList(strings);
+            if (strings.Length > 0)
+            {
+                PutWordsIntoList(strings);
+                return true;
+            }
+            return false;
         }
 
         static void PutWordsIntoList(string[] strings)
@@ -113,7 +160,6 @@ namespace Lab01_IsomorphicStrings
                 }
                 item.ExactCode = new string(chars);
                 ExactCode.Clear();
-                Console.WriteLine(item.BaseString + " :" + item.ExactCode);
 
             }
 
@@ -121,8 +167,8 @@ namespace Lab01_IsomorphicStrings
 
         static void DetermineLooseCode()
         {
-            Dictionary<char, char> LooseCode = new Dictionary<char, char>();
             //determines the occurences of letters in assending order i.e Word: moo Code: 12 or Word: Sad Code: 111
+            Dictionary<char, char> LooseCode = new Dictionary<char, char>();
             foreach (Word item in words)
             {
 
@@ -143,8 +189,8 @@ namespace Lab01_IsomorphicStrings
                         charactersInString.Add(c);
                         LooseCode.Add(c, '1');
                     }
-
                 }
+
                 var keys = LooseCode.Keys;
                 char[] chars = new char[keys.Count];
                 int idex = 0;
@@ -157,7 +203,6 @@ namespace Lab01_IsomorphicStrings
                 Array.Sort(chars);
                 item.LooseCode = new string(chars);
                 LooseCode.Clear();
-                Console.WriteLine(item.LooseCode + " : " + item.BaseString);
             }
 
         }
@@ -172,7 +217,6 @@ namespace Lab01_IsomorphicStrings
 
         static void DetermineLooseIsomorphs()
         {
-            List<Word> LooseIsos = new List<Word>();
             List<string> codes = new List<string>();
             foreach (var item in words)
             {
@@ -183,33 +227,22 @@ namespace Lab01_IsomorphicStrings
             }
             foreach (var code in codes)
             {
+                List<Word> LooseIsos = new List<Word>();
                 var query = words.Where(w => w.LooseCode == code);
                 LooseIsos = query.ToList();
-                Console.WriteLine("LISTING OF THINGS");
-                foreach (var item in LooseIsos)
-                {
-                    Console.WriteLine(item.BaseString + " : " + item.LooseCode);
-                }
                 if (LooseIsos.Count > 1)
                 {
                     isomorphicLooseList.Add(code, LooseIsos);
-                    LooseIsos.Clear();
                 }
                 else
                 {
                     nonisomorphicList.Add(LooseIsos.First());
-                    LooseIsos.Clear();
                 }
             }
-
-            Console.WriteLine("NUM OF NONISOMORPHS: " + nonisomorphicList.Count);
-
-
         }
 
         static void DetermineExactIsomorphs()
         {
-            List<Word> ExactIsomorphs = new List<Word>();
             List<string> codes = new List<string>();
             foreach (var item in words)
             {
@@ -220,27 +253,18 @@ namespace Lab01_IsomorphicStrings
             }
             foreach (var code in codes)
             {
+                List<Word> ExactIsomorphs = new List<Word>();
                 var query = words.Where(w => w.ExactCode == code);
                 ExactIsomorphs = query.ToList();
-                Console.WriteLine("LISTING OF THINGS");
-                foreach (var item in ExactIsomorphs)
-                {
-                    Console.WriteLine(item.BaseString + " : " + item.ExactCode);
-                }
                 if (ExactIsomorphs.Count > 1)
                 {
                     isomorphicExactList.Add(code, ExactIsomorphs);
-                    ExactIsomorphs.Clear();
                 }
                 else
                 {
                     nonisomorphicList.Add(ExactIsomorphs.First());
-                    ExactIsomorphs.Clear();
                 }
             }
-            
-            Console.WriteLine("NUM OF NONISOMORPHS: " + nonisomorphicList.Count);
-
         }
 
         static void CleanNonIsomorphList()
@@ -248,8 +272,8 @@ namespace Lab01_IsomorphicStrings
             List<Word> tempList = new List<Word>();
             foreach (var item in nonisomorphicList)
             {
-                
-                if(!tempList.Contains(item))
+
+                if (!tempList.Contains(item))
                 {
                     tempList.Add(item);
                 }
@@ -259,27 +283,28 @@ namespace Lab01_IsomorphicStrings
             Console.WriteLine("NONISOMORPHS: \n");
             foreach (Word w in nonisomorphicList)
             {
-                Console.WriteLine(w.BaseString + ": Exact Code: "+ w.ExactCode +  " Loose Code :" + w.LooseCode);
+                Console.WriteLine(w.BaseString + ": Exact Code: " + w.ExactCode + " Loose Code :" + w.LooseCode);
             }
         }
 
         static void printLists()
         {
-            Console.WriteLine("EXACT ISOMORPHS");
-            if(isomorphicExactList.Count != 0)
+            Console.WriteLine("\n\nEXACT ISOMORPHS\n");
+            if (isomorphicExactList.Count != 0)
             {
                 List<string> codes = isomorphicExactList.Keys.ToList();
                 foreach (var c in codes)
                 {
-                    Console.WriteLine("CODE: "+ c);
+                    Console.WriteLine("CODE: " + c);
                     var thingy = isomorphicExactList[c];
                     foreach (Word w in thingy)
                     {
-                        Console.WriteLine(w.BaseString);
+                        Console.Write(w.BaseString + "\t");
                     }
+                    Console.WriteLine();
                 }
             }
-            Console.WriteLine("LOOSE ISOMORPHS");
+            Console.WriteLine("\n\nLOOSE ISOMORPHS\n");
             if (isomorphicLooseList.Count != 0)
             {
                 List<string> codes = isomorphicLooseList.Keys.ToList();
@@ -288,8 +313,9 @@ namespace Lab01_IsomorphicStrings
                     Console.WriteLine("CODE: " + c);
                     foreach (var w in isomorphicLooseList[c])
                     {
-                        Console.WriteLine(w.BaseString);
+                        Console.Write(w.BaseString + "\t");
                     }
+                    Console.WriteLine();
                 }
             }
         }
