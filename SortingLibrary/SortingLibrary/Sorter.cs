@@ -44,16 +44,17 @@ namespace SortingLibrary
 
         public static void InsertionSort(T[] arr)
         {
-            for (int i = 1; i < arr.Length-1; i++)
+            for (int i = 1; i < arr.Length; i++)
             {
                 var v = arr[i];
                 int j = i - 1;
 
                 while (j >= 0 && (arr[j].CompareTo(v) > 0))
                 {
-                    arr[j + 1] = arr[j];
+                    T temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
                     j = j - 1;
-                    v = arr[j + 1];
                 }
             }
         }
