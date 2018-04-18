@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Lab01_IsomorphicStrings
 {
@@ -19,47 +20,6 @@ namespace Lab01_IsomorphicStrings
 
     class Program
     {
-
-        //public static int[] generateRandomArray(int size)
-        //{
-        //    int[] temp = new int[size];
-        //    for (int i = 0; i < temp.Length; i++)
-        //    {
-        //        Random randy = new Random();
-        //        temp[i] = randy.Next(10);
-        //    }
-        //    return temp;
-        //}
-        //public static void Main(string[] args)
-        //{
-        //    int[] randomArray = generateRandomArray(8);
-        //    foreach (var item in randomArray)
-        //    {
-        //        Console.Write(item + ", ");
-        //    }
-        //    SortingTest(randomArray);
-        //}
-
-        //public static void SortingTest(int[] array)
-        //{
-        //    int[] temp = array;
-        //    int max = temp[0];
-        //    int min = temp[0];
-        //    int average = 0;
-        //    for (int i = 0; i < temp.Length; i++)
-        //    {
-        //        if (temp[i] > max) max = temp[i];
-        //        if (temp[i] < min) min = temp[i];
-        //        average += temp[i];
-        //    }
-        //    average = average / temp.Length;
-
-        //    Console.WriteLine("\nMax: " + max);
-        //    Console.WriteLine("Min: " + min);
-        //    Console.WriteLine("Average: " + average);
-
-        //}
-
 
         static List<Word> words = new List<Word>();
 
@@ -272,52 +232,60 @@ namespace Lab01_IsomorphicStrings
             List<Word> tempList = new List<Word>();
             foreach (var item in nonisomorphicList)
             {
-
                 if (!tempList.Contains(item))
                 {
                     tempList.Add(item);
                 }
+                if(isomorphicExactList.ContainsKey(item.ExactCode) || isomorphicLooseList.ContainsKey(item.LooseCode))
+                {
+                    tempList.Remove(item);
+                }
             }
             nonisomorphicList = tempList;
 
-            Console.WriteLine("NONISOMORPHS: \n");
-            foreach (Word w in nonisomorphicList)
-            {
-                Console.WriteLine(w.BaseString + ": Exact Code: " + w.ExactCode + " Loose Code :" + w.LooseCode);
-            }
         }
 
         static void printLists()
         {
-            Console.WriteLine("\n\nEXACT ISOMORPHS\n");
+            StringBuilder sBuilder = new StringBuilder();
+
+            sBuilder.Append("\nEXACT ISOMORPHS\n\n");
             if (isomorphicExactList.Count != 0)
             {
                 List<string> codes = isomorphicExactList.Keys.ToList();
                 foreach (var c in codes)
                 {
-                    Console.WriteLine("CODE: " + c);
+                    sBuilder.Append(c + ": ");
                     var thingy = isomorphicExactList[c];
                     foreach (Word w in thingy)
                     {
-                        Console.Write(w.BaseString + "\t");
+                        sBuilder.Append(w.BaseString + "   ");
                     }
-                    Console.WriteLine();
+                    sBuilder.Append("\n");
                 }
             }
-            Console.WriteLine("\n\nLOOSE ISOMORPHS\n");
+            sBuilder.Append("\nLOOSE ISOMORPHS\n\n");
             if (isomorphicLooseList.Count != 0)
             {
                 List<string> codes = isomorphicLooseList.Keys.ToList();
                 foreach (var c in codes)
                 {
-                    Console.WriteLine("CODE: " + c);
+                    sBuilder.Append(c + ": ");
                     foreach (var w in isomorphicLooseList[c])
                     {
-                        Console.Write(w.BaseString + "\t");
+                        sBuilder.Append(w.BaseString + "   ");
                     }
-                    Console.WriteLine();
+                    sBuilder.Append("\n");
                 }
             }
+
+            sBuilder.Append("\nNONISOMORPHS: \n\n");
+            foreach (Word w in nonisomorphicList)
+            {
+                sBuilder.Append(w.BaseString + "   ");
+            }
+            string[] lines = sBuilder.ToString().Split('\n');
+            System.IO.File.WriteAllLines(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\OutPut.txt", lines);
         }
 
     }

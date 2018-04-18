@@ -8,6 +8,8 @@ namespace SortingLibrary
 {
     public class Sorter<T> where T : IComparable<T>
     {
+
+        public static Random randy = new Random();
         public static void BubbleSort(T[] arr)
         {
             for (int i = 0; i < arr.Length - 1; i++)
@@ -59,6 +61,25 @@ namespace SortingLibrary
             }
         }
 
+        public static void MergeSort(T[] arr)
+        {
+            if(arr.Count() > 1)
+            {
+                int randomIndex = randy.Next(0, arr.Count());
+                T pivot = arr[randomIndex];
+
+            }
+        }
+
+        public static void Merge(T[] A, T[] B, T[] origin )
+        {
+           
+        }
+
+        public static void QuickSort(T[] arr)
+        {
+
+        }
     }
 
 }
