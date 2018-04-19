@@ -159,7 +159,7 @@ namespace UnitTestProject1
         public void QuickSortOnAscendingArrayOf100()
         {
             int[] arr = CloneAsc;
-            Sorter<int>.MergeSort(arr);
+            Sorter<int>.QuickSort(arr);
             string actual = ArrayToString(arr);
             Assert.AreEqual(expected, actual);
         }

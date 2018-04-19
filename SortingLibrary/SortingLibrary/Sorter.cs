@@ -63,22 +63,59 @@ namespace SortingLibrary
 
         public static void MergeSort(T[] arr)
         {
-            if(arr.Count() > 1)
+            T[] A;
+            T[] B;
+            if (arr.Length > 1)
             {
-                int randomIndex = randy.Next(0, arr.Count());
-                T pivot = arr[randomIndex];
+                A = new T[arr.Length / 2];
+                B = new T[arr.Length / 2];
+                Array.Copy(arr, A, (arr.Length / 2));
+                Array.Copy(arr, (arr.Length / 2), B, 0, B.Length - 1);
 
+                MergeSort(A);
+                MergeSort(B);
+                Merge(A, B, arr);
             }
+
+
         }
 
-        public static void Merge(T[] A, T[] B, T[] origin )
+        public static void Merge(T[] A, T[] B, T[] origin)
         {
-           
+            int k = 0;
+            int i = 0;
+            int j = 0;
+            while (i < A.Length && j < B.Length)
+            {
+                if (A[i].CompareTo(B[j]) < 0)
+                {
+                    origin[k] = A[i];
+                    i++;
+                }
+                else
+                {
+                    origin[k] = B[j];
+                    j++;
+                    k++;
+                }
+            }
+            //if (i == A.Length)
+            //{
+            //    Array.Copy(A, j, origin, A.Length - k, A.Length);
+            //}
+            //else
+            //{
+            //    Array.Copy(B, i, origin, k, A.Length);
+
+            //}
+
+
         }
 
         public static void QuickSort(T[] arr)
         {
-
+            int randomIndex = randy.Next(0, arr.Count());
+            T pivot = arr[randomIndex];
         }
     }
 
