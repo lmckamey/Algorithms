@@ -67,17 +67,13 @@ namespace SortingLibrary
             T[] B;
             if (arr.Length > 1)
             {
-                A = new T[arr.Length / 2];
-                B = new T[arr.Length / 2];
-                Array.Copy(arr, A, (arr.Length / 2));
-                Array.Copy(arr, (arr.Length / 2), B, 0, B.Length - 1);
+                A = arr.Take(arr.Length / 2).ToArray();
+                B = arr.Skip(arr.Length / 2).ToArray();
 
                 MergeSort(A);
                 MergeSort(B);
                 Merge(A, B, arr);
             }
-
-
         }
 
         public static void Merge(T[] A, T[] B, T[] origin)
@@ -96,26 +92,46 @@ namespace SortingLibrary
                 {
                     origin[k] = B[j];
                     j++;
-                    k++;
                 }
+                k++;
             }
-            //if (i == A.Length)
-            //{
-            //    Array.Copy(A, j, origin, A.Length - k, A.Length);
-            //}
-            //else
-            //{
-            //    Array.Copy(B, i, origin, k, A.Length);
+            while (i < A.Length)
+            {
+                origin[k] = A[i];
+                i++;
+                k++;
+            }
 
-            //}
-
-
+            while (j < B.Length)
+            {
+                origin[k] = B[j];
+                j++;
+                k++;
+            }
         }
 
         public static void QuickSort(T[] arr)
         {
-            int randomIndex = randy.Next(0, arr.Count());
-            T pivot = arr[randomIndex];
+            if (arr.Length > 0)
+            {
+                List<T> Left = new List<T>();
+                List<T> Right = new List<T>();
+                int randomIndex = randy.Next(0, arr.Count());
+                T pivot = arr[0];
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    if (arr[i].CompareTo(pivot) < 0)
+                    {
+                        Left.Add(arr[i]);
+                    }
+                    else if (arr[i].CompareTo(pivot) > 0)
+                    {
+                        Right.Add(arr[i]);
+                    }
+                }
+                QuickSort(Left.ToArray());
+                QuickSort(Right.ToArray());
+            } 
         }
     }
 
