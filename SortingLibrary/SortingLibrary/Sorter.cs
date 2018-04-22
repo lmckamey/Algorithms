@@ -117,7 +117,7 @@ namespace SortingLibrary
                 List<T> Left = new List<T>();
                 List<T> Right = new List<T>();
                 int randomIndex = randy.Next(0, arr.Count());
-                T pivot = arr[0];
+                T pivot = arr[randomIndex];
                 for (int i = 0; i < arr.Length; i++)
                 {
                     if (arr[i].CompareTo(pivot) < 0)
@@ -129,8 +129,20 @@ namespace SortingLibrary
                         Right.Add(arr[i]);
                     }
                 }
-                QuickSort(Left.ToArray());
-                QuickSort(Right.ToArray());
+                var leftArray = Left.ToArray();
+                var rightArray = Right.ToArray();
+                QuickSort(leftArray);
+                QuickSort(rightArray);
+
+                for (int i = 0; i < leftArray.Length; i++)
+                {
+                    arr[i] = leftArray[i];
+                }
+                arr[leftArray.Length] = pivot;
+                for (int i = 0; i < rightArray.Length; i++)
+                {
+                    arr[i + leftArray.Length + 1] = rightArray[i];
+                }
             } 
         }
     }
