@@ -35,7 +35,7 @@ namespace nQueens
             Console.WriteLine("Step Count: " + stepCount);
             Console.WriteLine("Solutions:  " + solutions.Count);
             Console.WriteLine("TIME: " + sw.Elapsed);
-            //PrintArray();
+            PrintArray();
         }
 
 
