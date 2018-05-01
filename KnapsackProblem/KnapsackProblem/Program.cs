@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Linq
+using System.Linq;
 
 namespace KnapsackProblem
 {
 
-    struct knapsackItem
+    struct KnapsackItem
     {
         public string name;
         public int weight;
@@ -14,6 +14,8 @@ namespace KnapsackProblem
 
     class Program
     {
+
+        static KnapsackItem[] items;
         static void Main(string[] args)
         {
 
@@ -29,6 +31,15 @@ namespace KnapsackProblem
             string[] lines = File.ReadLines(path).ToArray();
             int knapsackSize = 0;
             int.TryParse(lines[0], out knapsackSize);
+            items = new KnapsackItem[knapsackSize];
+
+            for (int i = 1; i < lines.Length; i++)
+            {
+                if(true/* string begins with */)
+                {
+                    lines[i].Split()
+                }
+            }
 
         }
     }
