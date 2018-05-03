@@ -17,10 +17,11 @@ namespace KnapsackProblem
     {
 
         static List<KnapsackItem> items = new List<KnapsackItem>();
-        static List<KnapsackItem> solution = new List<KnapsackItem>();
+        static List<KnapsackItem> currentKnapsack = new List<KnapsackItem>();
 
-        static List<List<KnapsackItem>> solutions = new List<List<KnapsackItem>>();
+        static Dictionary<int, List<KnapsackItem>> solutions = new Dictionary<int, List<KnapsackItem>>();
         static int allotedweight;
+        static int counter = 0;
 
         static void Main(string[] args)
         {
@@ -33,7 +34,10 @@ namespace KnapsackProblem
             Console.WriteLine("Please enter a file path: ");
             OpenFile(Console.ReadLine());
             PrintList();
-            Console.WriteLine(DeterminSolutions(items.Count - 1));
+            DetermineSolutions();
+            CleanSolutions();
+            PrintSolutions();
+            DetermineBestSolution();
         }
 
         static void OpenFile(string path)
@@ -61,49 +65,102 @@ namespace KnapsackProblem
         }
 
 
-        static int DeterminSolutions(int index)
+        static void DetermineSolutions()
         {
-            int result = 0;
-            if(solution.Contains(items[index]))
+            currentKnapsack.Clear();
+            for (int i = 0; i < items.Count; i++)
             {
+                currentKnapsack.Add(items[i]);
+                var temp = currentKnapsack.Select(x => x).ToList();
+                int value = 0;
+                foreach (var item in temp)
+                {
+                    value += item.value;
+                }
+                if (!(solutions.ContainsValue(temp) && solutions.ContainsKey(value)))
+                    solutions.Add(value, temp);
+                for (int j = 0; j < items.Count; j++)
+                {
+                    if (!currentKnapsack.Contains(items[j]))
+                        currentKnapsack.Add(items[j]);
+                    temp = currentKnapsack.Select(x => x).ToList();
+                    value = 0;
+                    foreach (var item in temp)
+                    {
+                        value += item.value;
+                    }
 
+                    if (!solutions.ContainsKey(value))
+                        solutions.Add(value, temp);
+                }
+                currentKnapsack.Clear();
             }
-            if (index == 0 || allotedweight == 0)
-                result = 0;
-            else if (items[index].weight > allotedweight)
-            {
-                result = DeterminSolutions(index - 1);
-            }
-            else
-            {
-                int temp = DeterminSolutions(index - 1);
-                allotedweight -= items[index].weight;
-                int temp2 = items[index].value + DeterminSolutions(index - 1);
-                result = Math.Max(temp, temp2);
-            }
-            return result;
         }
+
+        static void CleanSolutions()
+        {
+            Dictionary<int, List<KnapsackItem>> tempSolutions = new Dictionary<int, List<KnapsackItem>>();
+            var keys = solutions.Keys;
+            foreach (var key in keys)
+            {
+                int weight = 0;
+                foreach (var item in solutions[key])
+                {
+                    weight += item.weight;
+                }
+                if (weight <= allotedweight)
+                    tempSolutions.Add(key, solutions[key]);
+            }
+
+            solutions = tempSolutions;
+        }
+
+        static void DetermineBestSolution()
+        {
+            List<KnapsackItem> tempSolutions = new List<KnapsackItem>();
+            int maxvalue = 0;
+            var keys = solutions.Keys;
+            foreach (var key in keys)
+            {
+                int value = 0;
+                foreach (var item in solutions[key])
+                {
+                    value += item.value;
+                }
+                if (value > maxvalue)
+                {
+                    maxvalue = value;
+                    tempSolutions = solutions[key];
+                }
+            }
+            Console.WriteLine("\n\nBEST SOLUTION: ");
+            int weight = 0;
+            int totalValue = 0;
+            foreach (var item in tempSolutions)
+            {
+                Console.WriteLine(item.name);
+                weight += item.weight;
+                totalValue += item.value;
+            }
+            Console.WriteLine("Value: " + totalValue);
+            Console.WriteLine("Weight: " + weight);
+
+        }
+
         static void PrintList()
         {
-            Console.WriteLine("ITEMS FOUND: ");
+
+            Console.WriteLine("\n\n\nITEMS FOUND: ");
             foreach (var item in items)
             {
                 Console.WriteLine(item.name + ", " + item.weight + ", " + item.value);
             }
+            Console.WriteLine();
+        }
 
-            //Console.WriteLine("Solution");
-            //foreach (var item in solution)
-            //{
-            //    Console.WriteLine(item.name);
-            //}
-            //Console.WriteLine("Solutions");
-            //foreach (var item in solutions)
-            //{
-            //    foreach (var item2 in item)
-            //    {
-            //        Console.WriteLine(item2.name);
-            //    }
-            //}
+        static void PrintSolutions()
+        {
+            Console.WriteLine("Total Solutions : " + solutions.Count);
         }
 
 
