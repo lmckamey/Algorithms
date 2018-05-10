@@ -3,114 +3,252 @@ using System.Collections.Generic;
 
 namespace CodeWarsScratch
 {
-    struct Vec2
+    class Class1
     {
-        public int x, y;
-    }
-
-    class Program
-    {
-        public static Random randy = new Random();
-
-        static int[] array = { 1, 5, 8, 2, 3, 6, 7, 9, 0, 4 };
-        static void Main(string[] args)
+        static void Main()
         {
-            for (int i = 0; i < array.Length; i++)
+            SingleLinkedList<int> test = new SingleLinkedList<int>();
+            Console.WriteLine(test.ToString());
+            test.Add(0);
+            test.Add(1);
+            test.Add(2);
+            test.Add(3);
+            test.Add(4);
+            test.Add(5);
+            Console.WriteLine(test.ToString());
+            //test.Remove();
+            //test.Remove();
+            //test.Remove();
+            //test.Add(1);
+            //Console.WriteLine(test.ToString());
+
+            test.Insert(10, 2);
+            Console.WriteLine(test.ToString());
+            test.Insert(20, 1);
+            Console.WriteLine(test.ToString());
+            test.Insert(1001, 0);
+            Console.WriteLine(test.ToString());
+            try
             {
-                Console.Write(array[i] + " ");
+                test.Insert(0110101, 1010);
+            }catch(IndexOutOfRangeException)
+            {
+                Console.WriteLine("OUT OF BOUNDS");
+            }
+            try
+            {
+                test.Insert(-10, test.Count);
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Console.WriteLine("OUT OF BOUNDS");
             }
 
-            //array = new int[] {4, 2, 1, 3, 4};
-            QuickSort(array);
 
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine();
-            for (int i = 0; i < array.Length; i++)
-            {
-                Console.Write(array[i] + " ");
-            }
-
-        }
-
-        static void QuickSort(int[] arr)
-        {
-            if (arr.Length <= 1) return;
-            
-            List<int> Left = new List<int>();
-            List<int> Right = new List<int>();
-            int randomIndex = randy.Next(0, arr.Length);
-            int pivot = arr[randomIndex];
-            for (int i = 0; i < arr.Length; i++)
-            {
-                if (arr[i].CompareTo(pivot) < 0)
-                {
-                    Left.Add(arr[i]);
-                }
-                else if (arr[i].CompareTo(pivot) > 0)
-                {
-                    Right.Add(arr[i]);
-                }
-            }
-            var leftArray = Left.ToArray();
-            var rightArray = Right.ToArray();
-            QuickSort(leftArray);
-            QuickSort(rightArray);
-
-            for (int i = 0; i < leftArray.Length; i++)
-            {
-                arr[i] = leftArray[i];
-            }
-            arr[leftArray.Length] = pivot;
-            for (int i = 0; i < rightArray.Length; i++)
-            {
-                arr[i + leftArray.Length+1] = rightArray[i];
-            }
-            
-        }
-
-            //public static int[,] FloodFill(int[,] array, int y, int x, int newValue)
-            //{
-            //    array[x, y] = newValue;
+            #region Trycatch
+            //Console.WriteLine("REMOVEAT");
+            ////try
+            ////{
+            ////    test.RemoveAt(0);
+            ////    Console.WriteLine(test.ToString());
+            ////}
+            ////catch (IndexOutOfRangeException)
+            ////{
+            ////    Console.WriteLine("OUT OF BOUNDS!");
+            ////}
+            ////try
+            ////{
+            ////    test.RemoveAt(1);
+            ////    Console.WriteLine(test.ToString());
+            ////}
+            ////catch (IndexOutOfRangeException)
+            ////{
+            ////    Console.WriteLine("OUT OF BOUNDS!");
+            ////}
+            ////try
+            ////{
+            ////    test.RemoveAt(10);
+            ////    Console.WriteLine(test.ToString());
+            ////}
+            ////catch (IndexOutOfRangeException)
+            ////{
+            ////    Console.WriteLine("OUT OF BOUNDS!");
+            ////}
+            ////try
+            ////{
+            ////    test.RemoveAt(0);
+            ////    Console.WriteLine(test.ToString());
+            ////}
+            ////catch (IndexOutOfRangeException)
+            ////{
+            ////    Console.WriteLine("OUT OF BOUNDS!");
+            ////}
+            #endregion
 
 
-            //    return array;
-            //}
-
-            //public static void GetNeighbors(int[,] array, int x1, int y1, Queue<Vec2> queue)
-            //{
-            //    List<Vec2> mylist = new List<Vec2>();
-            //    //middle with Four Neighbors
-            //    if ((x1 < array.GetLength(0) && x1 > 0) && (y1 < array.GetLength(1) && y1 > 0))
-            //    {
-            //        mylist.Add(new Vec2 { x = x1 + 1, y = y1 });
-            //        mylist.Add(new Vec2 { x = x1 - 1, y = y1 });
-            //        mylist.Add(new Vec2 { x = x1, y = y1 + 1 });
-            //        mylist.Add(new Vec2 { x = x1, y = y1 - 1 });
-            //    }
-            //    //Far Right with 3 neighbors
-            //    else if (x1 == array.GetLength(0) && (y1 < array.GetLength(1) && y1 > 0))
-            //    {
-            //        mylist.Add(new Vec2 { x = x1 - 1, y = y1 });
-            //        mylist.Add(new Vec2 { x = x1, y = y1 + 1 });
-            //        mylist.Add(new Vec2 { x = x1, y = y1 - 1 });
-            //    }
-            //    //Far Left with 3 Neighbors
-            //    else if (x1 == 0 && (y1 < array.GetLength(1) && y1 > 0))
-            //    {
-
-            //    }
-            //    //Bottome with 3 Neighbors
-            //    else if ((x1 < array.GetLength(0) && x1 > 0) && (y1 == array.GetLength(1)))
-            //    {
-
-            //    }
-            //    //Top with 3 Neighbors
-            //    else if ((x1 < array.GetLength(0) && x1 > 0) && (y1 == 0))
-            //    {
-
-            //    }
-            //}
         }
     }
+    public class SingleLinkedList<T>
+    {
+        public class Node<T>
+        {
+            public Node<T> m_next;
+            public T m_value;
+        }
+
+        private Node<T> m_head = null;
+        private Node<T> m_tail = null;
+
+        public int Count { get; set; }
+
+        public void Add(T val)
+        {
+            Node<T> tempnode = new Node<T>
+            {
+                m_value = val
+            };
+
+            if (m_head == null)
+            {
+                m_head = tempnode;
+                m_tail = tempnode;
+            }
+            else
+            {
+                m_tail.m_next = tempnode;
+                m_tail = tempnode;
+            }
+            Count++;
+        }
+
+        public void Insert(T val, int index)
+        {
+
+            if (index >= Count || index < 0)
+            {
+                throw new IndexOutOfRangeException();
+            }
+            if (index == 0)
+            {
+                Node<T> tempNode = new Node<T> { m_value = val, m_next = m_head };
+                m_head = tempNode;
+            }
+            else
+            {
+                Node<T> currentNode = m_head;
+                Node<T> previousNode = null;
+                for (int i = 0; i < index; i++)
+                {
+                    previousNode = currentNode;
+                    currentNode = currentNode.m_next;
+                }
+                Node<T> tempNode = new Node<T> { m_value = val, m_next = currentNode };
+                previousNode.m_next = tempNode;
+            }
+            Count++;
+        }
+
+        public T Get(int index)
+        {
+            if (index >= Count || index < 0)
+            {
+                throw new IndexOutOfRangeException();
+            }
+            Node<T> currentNode = m_head;
+            for (int i = 1; i < index; i++)
+            {
+                currentNode = currentNode.m_next;
+            }
+            return currentNode.m_value;
+        }
+
+        public T Remove()
+        {
+            m_head = m_head.m_next;
+            return m_head.m_value;
+        }
+
+        public T RemoveAt(int index)
+        {
+            if (index >= Count || index < 0)
+            {
+                throw new IndexOutOfRangeException();
+            }
+            if (index == 0)
+            {
+                Node<T> tempNode = new Node<T>();
+                m_head = tempNode;
+            }
+            else
+            {
+                Node<T> currentNode = m_head;
+                Node<T> previousNode = null;
+                for (int i = 0; i < index; i++)
+                {
+                    previousNode = currentNode;
+                    currentNode = currentNode.m_next;
+                }
+                Node<T> tempNode = new Node<T>();
+                previousNode.m_next = tempNode;
+            }
+        }
+
+        public T RemoveLast()
+        {
+            Node<T> currentNode = m_head;
+            for (int i = 0; i < Count - 2; i++)
+            {
+                currentNode = currentNode.m_next;
+            }
+            currentNode.m_next = null;
+            m_tail = currentNode;
+            if (Count > 0)
+            {
+                Count--;
+            }
+            return currentNode.m_value;
+        }
+
+        public void Clear()
+        {
+            m_head = null;
+            m_tail = null;
+            Count = 0;
+        }
+
+        public int Search(T val)
+        {
+            Node<T> currentNode = m_head;
+            int index = -1;
+            for (int i = 1; i < Count; i++)
+            {
+                currentNode = currentNode.m_next;
+                if(currentNode.m_value.Equals(val))
+                {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        }
+
+        public override string ToString()
+        {
+            string LLstring = "";
+            if (Count > 0)
+            {
+                Node<T> currentNode = m_head;
+                LLstring += m_head.m_value.ToString() + ", ";
+                for (int i = 1; i < Count; i++)
+                {
+                    currentNode = currentNode.m_next;
+                    LLstring += currentNode.m_value.ToString() + ", ";
+                }
+            }
+            return LLstring;
+        }
+
+    }
+
+}
 
