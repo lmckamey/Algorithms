@@ -16,74 +16,7 @@ namespace CodeWarsScratch
             test.Add(4);
             test.Add(5);
             Console.WriteLine(test.ToString());
-            //test.Remove();
-            //test.Remove();
-            //test.Remove();
-            //test.Add(1);
-            //Console.WriteLine(test.ToString());
 
-            test.Insert(10, 2);
-            Console.WriteLine(test.ToString());
-            test.Insert(20, 1);
-            Console.WriteLine(test.ToString());
-            test.Insert(1001, 0);
-            Console.WriteLine(test.ToString());
-            try
-            {
-                test.Insert(0110101, 1010);
-            }catch(IndexOutOfRangeException)
-            {
-                Console.WriteLine("OUT OF BOUNDS");
-            }
-            try
-            {
-                test.Insert(-10, test.Count);
-            }
-            catch (IndexOutOfRangeException)
-            {
-                Console.WriteLine("OUT OF BOUNDS");
-            }
-
-
-            #region Trycatch
-            //Console.WriteLine("REMOVEAT");
-            ////try
-            ////{
-            ////    test.RemoveAt(0);
-            ////    Console.WriteLine(test.ToString());
-            ////}
-            ////catch (IndexOutOfRangeException)
-            ////{
-            ////    Console.WriteLine("OUT OF BOUNDS!");
-            ////}
-            ////try
-            ////{
-            ////    test.RemoveAt(1);
-            ////    Console.WriteLine(test.ToString());
-            ////}
-            ////catch (IndexOutOfRangeException)
-            ////{
-            ////    Console.WriteLine("OUT OF BOUNDS!");
-            ////}
-            ////try
-            ////{
-            ////    test.RemoveAt(10);
-            ////    Console.WriteLine(test.ToString());
-            ////}
-            ////catch (IndexOutOfRangeException)
-            ////{
-            ////    Console.WriteLine("OUT OF BOUNDS!");
-            ////}
-            ////try
-            ////{
-            ////    test.RemoveAt(0);
-            ////    Console.WriteLine(test.ToString());
-            ////}
-            ////catch (IndexOutOfRangeException)
-            ////{
-            ////    Console.WriteLine("OUT OF BOUNDS!");
-            ////}
-            #endregion
 
 
         }
@@ -174,10 +107,11 @@ namespace CodeWarsScratch
             {
                 throw new IndexOutOfRangeException();
             }
+            T value = default(T);
             if (index == 0)
             {
-                Node<T> tempNode = new Node<T>();
-                m_head = tempNode;
+                value = m_head.m_value;
+                Remove();
             }
             else
             {
@@ -188,9 +122,10 @@ namespace CodeWarsScratch
                     previousNode = currentNode;
                     currentNode = currentNode.m_next;
                 }
-                Node<T> tempNode = new Node<T>();
-                previousNode.m_next = tempNode;
+                previousNode.m_next = currentNode.m_next;
+                value = currentNode.m_value;
             }
+            return value;
         }
 
         public T RemoveLast()
@@ -239,11 +174,12 @@ namespace CodeWarsScratch
             {
                 Node<T> currentNode = m_head;
                 LLstring += m_head.m_value.ToString() + ", ";
-                for (int i = 1; i < Count; i++)
+                for (int i = 1; i < Count-1; i++)
                 {
                     currentNode = currentNode.m_next;
                     LLstring += currentNode.m_value.ToString() + ", ";
                 }
+                LLstring += m_tail.m_value.ToString();
             }
             return LLstring;
         }

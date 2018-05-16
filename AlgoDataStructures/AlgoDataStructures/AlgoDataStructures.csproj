@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AlgoDataStructures</RootNamespace>
-    <AssemblyName>AlgoDataStructures</AssemblyName>
+    <AssemblyName>McKameyL_AlgoDataStructures</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
