@@ -519,6 +519,12 @@ namespace AlgoDataStructures
         {
             int index = 0;
             T[] array = new T[Count];
+            Node<T> currentNode = m_Root;
+
+            while(currentNode !=  null)
+            {
+
+            }
 
 
 
