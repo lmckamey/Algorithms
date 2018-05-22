@@ -401,8 +401,9 @@ namespace AlgoDataStructures
 
         Node<T> m_Root;
 
-        public int Count { get; set; }
+        int counter = 0;
 
+        public int Count { get; set; }
         public void Add(T val)
         {
             if (m_Root == null)
@@ -414,6 +415,156 @@ namespace AlgoDataStructures
                 InsertNode(m_Root, val);
             }
             Count++;
+        }
+
+
+        public bool Contains(T val)
+        {
+            Node<T> temp = Search(m_Root, val);
+            if (temp != null)
+            {
+                if (temp.Value.Equals(val))
+                    return true;
+            }
+            return false;
+        }
+
+
+        public void Remove(T val)
+        {
+            if (m_Root != null && Contains(val))
+            {
+                deleteNode(m_Root, val);
+                Count--;
+            }
+        }
+        
+        public void Clear()
+        {
+            m_Root = null;
+            Count = 0;
+        }
+
+        public string InOrder()
+        {
+            counter = 0;
+            if (m_Root != null)
+                return InOrderStrings(m_Root);
+            return "";
+        }
+
+        public string PreOrder()
+        {
+            counter = 0;
+            if (m_Root != null)
+                return PreOrderStrings(m_Root);
+            return "";
+        }
+
+        public string PostOrder()
+        {
+            counter = 0;
+            if (m_Root != null)
+                return PostOrderStrings(m_Root);
+            return "";
+        }
+
+        public int Height()
+        {
+            return (HeightHelp(m_Root));
+        }
+
+        public T[] ToArray()
+        {
+            T[] array;
+            int index = 0;
+            array = new T[Count];
+            if (m_Root != null)
+                InOderValues(m_Root, ref index, array);
+
+            return array;
+        }
+
+        private Node<T> deleteNode(Node<T> node, T value)
+        {
+            if (node == null)
+                return node;
+            //Leaf Case
+            if(node.LeftBranch == null &&  node.RightBranch == null && node.Value.Equals(value))
+            {
+                node = null;
+                return node;
+            }
+
+            if (node.LeftBranch != null && value.CompareTo(node.Value) < 0)
+                node.LeftBranch = deleteNode(node.LeftBranch, value);
+            else if (node.RightBranch != null && value.CompareTo(node.Value) > 0)
+                node.RightBranch = deleteNode(node.RightBranch, value);
+
+            else
+            {
+                if (node.LeftBranch == null)
+                {
+                    Node<T> temp = node.RightBranch;
+                    node = null;
+                    return temp;
+                }
+                else if (node.RightBranch == null)
+                {
+                    Node<T> temp = node.LeftBranch;
+                    node = null;
+                    return temp;
+                }
+
+                Node<T> temp2 = MinValueNode(node.RightBranch);
+
+                node.Value = temp2.Value;
+
+                node.RightBranch = deleteNode(node.RightBranch, temp2.Value);
+
+            }
+            return node;
+
+
+
+        }
+        private Node<T> MinValueNode(Node<T> node)
+        {
+            Node<T> currentNode = node;
+
+            while (currentNode.LeftBranch != null)
+            {
+                currentNode = currentNode.LeftBranch;
+            }
+            return currentNode;
+
+        }
+
+        private int HeightHelp(Node<T> node)
+        {
+            if (node == null)
+                return 0;
+            int h1 = 0;
+            int h2 = 0;
+            if (node.LeftBranch != null)
+                h1 = HeightHelp(node.LeftBranch);
+            if (node.RightBranch != null)
+                h2 = HeightHelp(node.RightBranch);
+            int h = 1 + Math.Max(h1, h2);
+            return h;
+        }
+
+        private Node<T> InOderValues(Node<T> node, ref int index, T[] array)
+        {
+            Node<T> temp;
+            if (node.LeftBranch != null)
+                temp = InOderValues(node.LeftBranch, ref index, array);
+            temp = node;
+            if (index < Count)
+                array[index++] = temp.Value;
+            if (node.RightBranch != null)
+                temp = InOderValues(node.RightBranch, ref index, array);
+            return temp;
         }
 
         private Node<T> InsertNode(Node<T> currentNode, T value)
@@ -434,17 +585,6 @@ namespace AlgoDataStructures
 
         }
 
-        public bool Contains(T val)
-        {
-            Node<T> temp = Search(m_Root, val);
-            if (temp != null)
-            {
-                if (temp.Value.Equals(val))
-                    return true;
-            }
-            return false;
-        }
-
         private Node<T> Search(Node<T> node, T val)
         {
             if (node == null || node.Value.Equals(val))
@@ -456,86 +596,55 @@ namespace AlgoDataStructures
             return Search(node.RightBranch, val);
         }
 
-        public void Remove(T val)
+        private string InOrderStrings(Node<T> node)
         {
-            Node<T> node = null;
-            if (m_Root != null)
+            string str = "";
+            if (node.LeftBranch != null)
             {
-                node = Search(m_Root, val);
+                str += InOrderStrings(node.LeftBranch);
             }
-            if (node != null)
+            counter++;
+            if (counter == Count)
+                str += node.Value;
+            else
+                str += node.Value + ", ";
+            if (node.RightBranch != null)
             {
-
+                str += InOrderStrings(node.RightBranch);
             }
+            return str;
         }
 
-        public void Clear()
+        private string PreOrderStrings(Node<T> node)
         {
-            m_Root = null;
-            Count = 0;
+            string str = "";
+            counter++;
+            if (counter == Count)
+                str += node.Value;
+            else
+                str += node.Value + ", ";
+            if (node.LeftBranch != null)
+                str += PreOrderStrings(node.LeftBranch);
+            if (node.RightBranch != null)
+                str += PreOrderStrings(node.RightBranch);
+            return str;
+
         }
 
-        public string InOrder()
+        private string PostOrderStrings(Node<T> node)
         {
-            return "";
-        }
+            string str = "";
+            if (node.LeftBranch != null)
+                str += PostOrderStrings(node.LeftBranch);
+            if (node.RightBranch != null)
+                str += PostOrderStrings(node.RightBranch);
 
-        public string PreOrder()
-        {
-            return "";
-        }
-
-        public string PostOrder()
-        {
-            return "";
-        }
-
-        public int Height()
-        {
-            Node<T> currentNode = m_Root;
-            int num = 1;
-            Node<T> prevNode = null;
-            while (currentNode != null)
-            {
-                if (currentNode.LeftBranch != null)
-                {
-                    prevNode = currentNode;
-                    num++;
-                    currentNode = currentNode.LeftBranch;
-                }
-                else if (currentNode.RightBranch != null)
-                {
-                    prevNode = currentNode;
-                    num++;
-                    currentNode = currentNode.RightBranch;
-                }
-                else
-                    currentNode = null;
-            }
-            return num;
-        }
-
-        public T[] ToArray()
-        {
-            int index = 0;
-            T[] array = new T[Count];
-            Node<T> currentNode = m_Root;
-
-            while(currentNode !=  null)
-            {
-
-            }
-
-
-
-            return array;
-        }
-
-        private Node<T> inOrderNodes(Node<T> node)
-        {
-            if (node == null)
-                return node;
-            return node;
+            counter++;
+            if (counter == Count)
+                str += node.Value;
+            else
+                str += node.Value + ", ";
+            return str;
         }
 
     }

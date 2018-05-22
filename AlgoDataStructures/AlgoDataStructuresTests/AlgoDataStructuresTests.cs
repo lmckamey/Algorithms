@@ -43,7 +43,7 @@ namespace Test
             list.Remove();
             Assert.AreEqual("", list.ToString());
         }
-        
+
         [TestMethod]
 
         public void SLL_TENREMOVE()
@@ -60,10 +60,10 @@ namespace Test
             list.Add(9);
             list.Add(10);
             list.Remove();
-            
+
             Assert.AreEqual("2, 3, 4, 5, 6, 7, 8, 9, 10", list.ToString());
         }
-        
+
         [TestMethod]
 
         public void SLL_TENREMOVEALL()
@@ -90,7 +90,7 @@ namespace Test
             list.Remove();
             list.Remove();
             Assert.AreEqual("", list.ToString());
-        }        
+        }
         [TestMethod]
 
         public void SLL_TENCLEAR()
@@ -145,7 +145,7 @@ namespace Test
             list.Add(10);
             Assert.AreEqual(6, list.Get(5));
         }
-        
+
         [TestMethod]
 
         public void SLL_TENGETAT9()
@@ -163,7 +163,7 @@ namespace Test
             list.Add(10);
             Assert.AreEqual(10, list.Get(9));
         }
-        
+
         [TestMethod]
         public void SLL_TENREMOVEAT0()
         {
@@ -181,7 +181,7 @@ namespace Test
             list.RemoveAt(0);
             Assert.AreEqual("2, 3, 4, 5, 6, 7, 8, 9, 10", list.ToString());
         }
-        
+
         [TestMethod]
         public void SLL_TENREMOVEAT5()
         {
@@ -199,7 +199,7 @@ namespace Test
             list.RemoveAt(5);
             Assert.AreEqual("1, 2, 3, 4, 5, 7, 8, 9, 10", list.ToString());
         }
-        
+
         [TestMethod]
         public void SLL_TENREMOVEAT9()
         {
@@ -217,7 +217,7 @@ namespace Test
             list.RemoveAt(9);
             Assert.AreEqual("1, 2, 3, 4, 5, 6, 7, 8, 9", list.ToString());
         }
-        
+
         [TestMethod]
         public void SLL_RemoveThenAdd()
         {
@@ -226,7 +226,7 @@ namespace Test
             list.Add(1);
             Assert.AreEqual("1", list.ToString());
         }
-        
+
         [TestMethod]
         public void SLL_SearchForValueAtHead()
         {
@@ -348,7 +348,7 @@ namespace Test
 
             Assert.IsNotNull(tree);
         }
-        
+
         [TestMethod]
         public void BSTContains()
         {
@@ -365,8 +365,8 @@ namespace Test
             tree.Add(1);
 
             Assert.IsTrue(tree.Contains(1));
-        }   
-        
+        }
+
         [TestMethod]
         public void BSTDoesNotContain()
         {
@@ -384,7 +384,7 @@ namespace Test
 
             Assert.IsFalse(tree.Contains(12381347));
         }
-        
+
         [TestMethod]
         public void BSTClear()
         {
@@ -405,7 +405,7 @@ namespace Test
             Assert.IsNotNull(tree);
             Assert.AreEqual(tree.Count, 0);
         }
-        
+
         [TestMethod]
         public void BSTHeightOf4()
         {
@@ -423,7 +423,181 @@ namespace Test
 
             int num = tree.Height();
 
-            Assert.AreEqual(num, 4);
+            Assert.AreEqual(4, num);
+        }
+        
+        [TestMethod]
+        public void BSTDeleteLeaf()
+        {
+            BinarySearchTree<int> tree = new BinarySearchTree<int>();
+
+
+            tree.Add(15);
+            tree.Add(20);
+            tree.Add(10);
+            tree.Add(12);
+            tree.Add(13);
+            tree.Add(145);
+            tree.Add(60);
+            tree.Add(1);
+
+            tree.Remove(60);
+            Assert.AreEqual("1, 10, 12, 13, 15, 20, 145", tree.InOrder());
+        }
+                
+        [TestMethod]
+        public void BSTDeleteWithTwoBranches()
+        {
+            BinarySearchTree<int> tree = new BinarySearchTree<int>();
+
+
+            tree.Add(15);
+            tree.Add(20);
+            tree.Add(10);
+            tree.Add(12);
+            tree.Add(13);
+            tree.Add(145);
+            tree.Add(60);
+            tree.Add(1);
+
+            tree.Remove(10);
+            Assert.AreEqual("1, 12, 13, 15, 20, 60, 145", tree.InOrder());
+        }
+
+                          
+        [TestMethod]
+        public void BSTDeleteWithOneBranch()
+        {
+            BinarySearchTree<int> tree = new BinarySearchTree<int>();
+
+
+            tree.Add(15);
+            tree.Add(20);
+            tree.Add(10);
+            tree.Add(12);
+            tree.Add(13);
+            tree.Add(145);
+            tree.Add(60);
+            tree.Add(1);
+
+            tree.Remove(20);
+            Assert.AreEqual("1, 10, 12, 13, 15, 60, 145", tree.InOrder());
+        }
+
+                        
+        [TestMethod]
+        public void BSTDeleteRoot()
+        {
+            BinarySearchTree<int> tree = new BinarySearchTree<int>();
+
+
+            tree.Add(15);
+            tree.Add(20);
+            tree.Add(10);
+            tree.Add(12);
+            tree.Add(13);
+            tree.Add(145);
+            tree.Add(60);
+            tree.Add(1);
+
+            tree.Remove(15);
+            Assert.AreEqual("1, 10, 12, 13, 20, 60, 145", tree.InOrder());
+        }
+
+
+        [TestMethod]
+        public void BSTHeightOf1()
+        {
+            BinarySearchTree<int> tree = new BinarySearchTree<int>();
+
+            tree.Add(15);
+
+            int num = tree.Height();
+
+            Assert.AreEqual(1, num);
+        }
+        
+        [TestMethod]
+        public void BSTHeightOf0()
+        {
+            BinarySearchTree<int> tree = new BinarySearchTree<int>();
+
+            int num = tree.Height();
+
+            Assert.AreEqual(0, num);
+        }
+
+        [TestMethod]
+        public void BSTInOrderString()
+        {
+            BinarySearchTree<int> tree = new BinarySearchTree<int>();
+
+            tree.Add(10);
+            tree.Add(7);
+            tree.Add(3);
+            tree.Add(8);
+            tree.Add(12);
+            tree.Add(11);
+
+            string list = tree.InOrder();
+            Assert.AreEqual("3, 7, 8, 10, 11, 12", list);
+        }
+
+        [TestMethod]
+        public void BSTPreOrderString()
+        {
+            BinarySearchTree<int> tree = new BinarySearchTree<int>();
+
+            tree.Add(10);
+            tree.Add(7);
+            tree.Add(3);
+            tree.Add(8);
+            tree.Add(12);
+            tree.Add(11);
+
+            string list = tree.PreOrder();
+            Assert.AreEqual("10, 7, 3, 8, 12, 11", list);
+        }
+
+        [TestMethod]
+        public void BSTPostOrderString()
+        {
+            BinarySearchTree<int> tree = new BinarySearchTree<int>();
+
+            tree.Add(10);
+            tree.Add(7);
+            tree.Add(3);
+            tree.Add(8);
+            tree.Add(12);
+            tree.Add(11);
+
+            string list = tree.PostOrder();
+            Assert.AreEqual("3, 8, 7, 11, 12, 10", list);
+        }
+
+
+        [TestMethod]
+        public void BSTToArray()
+        {
+            BinarySearchTree<int> tree = new BinarySearchTree<int>();
+
+            tree.Add(10);
+            tree.Add(7);
+            tree.Add(3);
+            tree.Add(8);
+            tree.Add(12);
+            tree.Add(11);
+
+            var array = tree.ToArray();
+
+            string thingy = "";
+
+            foreach (var item in array)
+            {
+                thingy += item + ", ";
+            }
+
+            Assert.AreEqual("3, 7, 8, 10, 11, 12, ", thingy);
         }
     }
 
