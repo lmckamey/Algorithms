@@ -16,7 +16,7 @@ namespace MazeSolver
         }
 
 
-       static List<List<string>> mazeInfo = new List<List<string>>();
+        static List<List<string>> mazeInfo = new List<List<string>>();
         static List<Node> currentMaze = new List<Node>();
         static void Main(string[] args)
         {
@@ -31,7 +31,7 @@ namespace MazeSolver
 
             PrintMazeInfo();
 
-            GenerateMaze(3);
+            GenerateMaze(0);
         }
 
         static bool ParseFileData(ref string[] lines)
@@ -71,7 +71,7 @@ namespace MazeSolver
                 }
             }
         }
-        
+
         static string PromptForString(string prompt)
         {
             Console.WriteLine(prompt);
@@ -95,21 +95,48 @@ namespace MazeSolver
 
         static void GenerateMaze(int index)
         {
-            foreach (var item in mazeInfo[index])
+            GenerateNode(mazeInfo[index][0]);
+            List<string> tempList = mazeInfo[index];
+            for (int i = 1; i < tempList.Count; i++)
             {
-                GenerateNode(item);
+                var query = tempList[i].Where(c => c != ',');
+                var thingy = query.ToList();
+
+                var query2 = currentMaze.Where(n => n.name == thingy[0].ToString());
+                Node first = query2.First();
+
+                List<Node> tempNeighbors = new List<Node>();
+                for (int j = 1; j < thingy.Count; j++)
+                {
+                    var query3 = currentMaze.Where(n => n.name == thingy[j].ToString());
+                    Node first2 = query2.First();
+                    tempNeighbors.Add(first2);
+                }
+                first.neighbors = tempNeighbors;
+            }
+
+            foreach (var item in currentMaze)
+            {
+                Console.WriteLine("Name: " + item.name);
+                Console.WriteLine("num Of Neighbors: " + item.neighbors.Count);
             }
         }
 
-        static Node GenerateNode(string nodeInfo)
+        static void GenerateNode(string nodeInfo)
         {
             var query = nodeInfo.Where(c => c != ',');
             var thingy = query.ToList();
             foreach (var item in thingy)
             {
-                Console.WriteLine(item);
+                Node tempNode = new Node();
+                tempNode.name = item.ToString();
+                tempNode.neighbors = new List<Node>();
+                currentMaze.Add(tempNode);
             }
-            return null;
+        }
+
+        static void BreadthFirstSearch(Node startingNode)
+        {
         }
     }
 }
