@@ -97,13 +97,14 @@ namespace MazeSolver
         {
             GenerateNode(mazeInfo[index][0]);
             List<string> tempList = mazeInfo[index];
-            for (int i = 1; i < tempList.Count; i++)
+            for (int i = 2; i < tempList.Count; i++)
             {
                 var query = tempList[i].Where(c => c != ',');
                 var thingy = query.ToList();
 
                 var query2 = currentMaze.Where(n => n.name == thingy[0].ToString());
                 Node first = query2.First();
+
 
                 List<Node> tempNeighbors = new List<Node>();
                 for (int j = 1; j < thingy.Count; j++)
@@ -114,6 +115,15 @@ namespace MazeSolver
                 }
                 first.neighbors = tempNeighbors;
             }
+
+            var pathQuery = tempList[1].Where(c => c != ',').ToList();
+            Node startNode = currentMaze.Where(n => n.name == pathQuery[0].ToString()).First();
+            Node endNode = currentMaze.Where(n => n.name == pathQuery[1].ToString()).First();
+
+            Console.WriteLine("START NODE: "+startNode.name);
+            Console.WriteLine("START NODE NUMOFNEIGHBORS: " + startNode.neighbors.Count);
+            Console.WriteLine("END NODE: "+endNode.name);
+            Console.WriteLine("END NODE NUMOFNEIGHBORS: " + endNode.neighbors.Count);
 
             foreach (var item in currentMaze)
             {
