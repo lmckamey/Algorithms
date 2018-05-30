@@ -17,7 +17,10 @@ namespace MazeSolver
 
 
         static List<List<string>> mazeInfo = new List<List<string>>();
+        static List<List<Node>> solutions = new List<List<Node>>();
         static List<Node> currentMaze = new List<Node>();
+        static Node endNode;
+        static Node startNode;
         static void Main(string[] args)
         {
             Run();
@@ -28,10 +31,39 @@ namespace MazeSolver
             string[] rawFileInfo = null;
             ParseFileData(ref rawFileInfo);
             populateMazeInfo(rawFileInfo);
+            //PrintMazeInfo();
 
-            PrintMazeInfo();
 
-            GenerateMaze(0);
+            for (int i = 0; i < mazeInfo.Count; i++)
+            //for (int i = 0; i < 1; i++)
+            {
+                List<Node> path = new List<Node>();
+                GenerateMaze(i);
+                //PrintCurrentMaze();
+                SolveMaze(startNode, path);
+                List<Node> solution = new List<Node>();
+                if (solutions.Count != 0)
+                {
+                    solution = solutions[0];
+                }
+                foreach (var item in solutions)
+                {
+                    if ((item.Count) < solution.Count)
+                    {
+                        solution = item;
+                    }
+                }
+                PrintSingeSolution(solution);
+                startNode = null;
+                endNode = null;
+                solutions.Clear();
+            }
+
+        }
+        static string PromptForString(string prompt)
+        {
+            Console.WriteLine(prompt);
+            return Console.ReadLine();
         }
 
         static bool ParseFileData(ref string[] lines)
@@ -71,28 +103,6 @@ namespace MazeSolver
                 }
             }
         }
-
-        static string PromptForString(string prompt)
-        {
-            Console.WriteLine(prompt);
-            return Console.ReadLine();
-        }
-
-        static void PrintMazeInfo()
-        {
-
-            for (int i = 0; i < mazeInfo.Count; i++)
-            {
-                Console.WriteLine("MAZEINFO " + i + ":");
-                foreach (var item in mazeInfo[i])
-                {
-                    Console.WriteLine(item);
-                }
-                Console.WriteLine();
-                Console.WriteLine();
-            }
-        }
-
         static void GenerateMaze(int index)
         {
             GenerateNode(mazeInfo[index][0]);
@@ -110,28 +120,18 @@ namespace MazeSolver
                 for (int j = 1; j < thingy.Count; j++)
                 {
                     var query3 = currentMaze.Where(n => n.name == thingy[j].ToString());
-                    Node first2 = query2.First();
+                    Node first2 = query3.First();
                     tempNeighbors.Add(first2);
                 }
                 first.neighbors = tempNeighbors;
             }
 
             var pathQuery = tempList[1].Where(c => c != ',').ToList();
-            Node startNode = currentMaze.Where(n => n.name == pathQuery[0].ToString()).First();
-            Node endNode = currentMaze.Where(n => n.name == pathQuery[1].ToString()).First();
+            startNode = currentMaze.Where(n => n.name == pathQuery[0].ToString()).First();
+            endNode = currentMaze.Where(n => n.name == pathQuery[1].ToString()).First();
 
-            Console.WriteLine("START NODE: "+startNode.name);
-            Console.WriteLine("START NODE NUMOFNEIGHBORS: " + startNode.neighbors.Count);
-            Console.WriteLine("END NODE: "+endNode.name);
-            Console.WriteLine("END NODE NUMOFNEIGHBORS: " + endNode.neighbors.Count);
 
-            foreach (var item in currentMaze)
-            {
-                Console.WriteLine("Name: " + item.name);
-                Console.WriteLine("num Of Neighbors: " + item.neighbors.Count);
-            }
         }
-
         static void GenerateNode(string nodeInfo)
         {
             var query = nodeInfo.Where(c => c != ',');
@@ -145,8 +145,88 @@ namespace MazeSolver
             }
         }
 
-        static void BreadthFirstSearch(Node startingNode)
+        static void SolveMaze(Node node, List<Node> path)
         {
+            if (node == null)
+                return;
+            if (path.Contains(node))
+            {
+                return;
+            }
+            path.Add(node);
+            if (node == endNode)
+            {
+                var solution = path.Select(n => n).ToList();
+                solutions.Add(solution);
+                return;
+            }
+            if (node.neighbors.Count != 0)
+            {
+                for (int i = 0; i < node.neighbors.Count; i++)
+                {
+                    List<Node> temp = new List<Node>(path);
+                    SolveMaze(node.neighbors[i], temp);
+                }
+            }
+
         }
+
+        static void PrintMazeInfo()
+        {
+
+            for (int i = 0; i < mazeInfo.Count; i++)
+            {
+                Console.WriteLine("MAZEINFO " + i + ":");
+                foreach (var item in mazeInfo[i])
+                {
+                    Console.WriteLine(item);
+                }
+                Console.WriteLine();
+                Console.WriteLine();
+            }
+        }
+        static void PrintCurrentMaze()
+        {
+
+            Console.WriteLine("STARTNODE:" + startNode.name);
+            Console.WriteLine("ENDNODE:" + endNode.name);
+            foreach (var item in currentMaze)
+            {
+                Console.WriteLine("Name: " + item.name);
+                Console.WriteLine("num Of Neighbors: " + item.neighbors.Count);
+                foreach (var item2 in item.neighbors)
+                {
+                    Console.WriteLine(item2.name);
+                }
+            }
+        }
+
+        static void PrintSolutions()
+        {
+            for (int i = 0; i < solutions.Count; i++)
+            {
+                Console.WriteLine("SOLUTION " + i + ":");
+                foreach (var item in solutions[i])
+                {
+                    Console.Write(item.name + ",");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        static void PrintSingeSolution(List<Node> solution)
+        {
+            Console.WriteLine("SOLUTION ");
+            if (solution.Count != 0)
+            {
+                for (int i = 0; i < solution.Count - 1; i++)
+                {
+                    Console.Write(solution[i].name + ",");
+                }
+                Console.Write(solution[solution.Count - 1].name);
+                Console.WriteLine();
+            }
+        }
+
     }
 }
