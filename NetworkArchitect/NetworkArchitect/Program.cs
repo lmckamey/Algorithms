@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MazeSolver
+namespace NetworkArchitect
 {
     class Program
     {
         public class Node
         {
             public string name;
-            public List<Node> neighbors;
+            public Dictionary<Node, int> neighbors;
         }
 
 
@@ -31,33 +31,32 @@ namespace MazeSolver
             string[] rawFileInfo = null;
             ParseFileData(ref rawFileInfo);
             populateMazeInfo(rawFileInfo);
-            //PrintMazeInfo();
+            PrintMazeInfo();
 
 
-            for (int i = 0; i < mazeInfo.Count; i++)
-            //for (int i = 0; i < 1; i++)
-            {
-                List<Node> path = new List<Node>();
-                GenerateMaze(i);
-                //PrintCurrentMaze();
-                SolveMaze(startNode, path);
-                List<Node> solution = new List<Node>();
-                if (solutions.Count != 0)
-                {
-                    solution = solutions[0];
-                }
-                foreach (var item in solutions)
-                {
-                    if ((item.Count) < solution.Count)
-                    {
-                        solution = item;
-                    }
-                }
-                PrintSingeSolution(solution);
-                startNode = null;
-                endNode = null;
-                solutions.Clear();
-            }
+            //for (int i = 0; i < mazeInfo.Count; i++)
+            ////for (int i = 0; i < 1; i++)
+            //{
+            //    List<Node> path = new List<Node>();
+            //    GenerateMaze(i);
+            //    //PrintCurrentMaze();
+            //    List<Node> solution = new List<Node>();
+            //    if (solutions.Count != 0)
+            //    {
+            //        solution = solutions[0];
+            //    }
+            //    foreach (var item in solutions)
+            //    {
+            //        if ((item.Count) < solution.Count)
+            //        {
+            //            solution = item;
+            //        }
+            //    }
+            //    PrintSingeSolution(solution);
+            //    startNode = null;
+            //    endNode = null;
+            //    solutions.Clear();
+            //}
 
         }
         static string PromptForString(string prompt)
@@ -93,14 +92,11 @@ namespace MazeSolver
                 {
                     info.Add(rawFileInfo[i]);
                 }
-                else
-                {
-                    if (info.Count != 0)
-                    {
-                        mazeInfo.Add(new List<string>(info));
-                        info.Clear();
-                    }
-                }
+            }
+            if (info.Count != 0)
+            {
+                mazeInfo.Add(new List<string>(info));
+                info.Clear();
             }
         }
         static void GenerateMaze(int index)
@@ -116,12 +112,11 @@ namespace MazeSolver
                 Node first = query2.First();
 
 
-                List<Node> tempNeighbors = new List<Node>();
+                Dictionary<Node, int> tempNeighbors = new Dictionary<Node, int>();
                 for (int j = 1; j < thingy.Count; j++)
                 {
                     var query3 = currentMaze.Where(n => n.name == thingy[j].ToString());
                     Node first2 = query3.First();
-                    tempNeighbors.Add(first2);
                 }
                 first.neighbors = tempNeighbors;
             }
@@ -134,41 +129,14 @@ namespace MazeSolver
         }
         static void GenerateNode(string nodeInfo)
         {
-            var query = nodeInfo.Where(c => c != ',');
-            var thingy = query.ToList();
-            foreach (var item in thingy)
+            string[] array = nodeInfo.Split(',');
+            foreach (var item in array)
             {
                 Node tempNode = new Node();
-                tempNode.name = item.ToString();
-                tempNode.neighbors = new List<Node>();
+                tempNode.name = item;
+                tempNode.neighbors = new Dictionary<Node, int>();
                 currentMaze.Add(tempNode);
             }
-        }
-
-        static void SolveMaze(Node node, List<Node> path)
-        {
-            if (node == null)
-                return;
-            if (path.Contains(node))
-            {
-                return;
-            }
-            path.Add(node);
-            if (node == endNode)
-            {
-                var solution = path.Select(n => n).ToList();
-                solutions.Add(solution);
-                return;
-            }
-            if (node.neighbors.Count != 0)
-            {
-                for (int i = 0; i < node.neighbors.Count; i++)
-                {
-                    List<Node> temp = new List<Node>(path);
-                    SolveMaze(node.neighbors[i], temp);
-                }
-            }
-
         }
 
         static void PrintMazeInfo()
@@ -196,7 +164,7 @@ namespace MazeSolver
                 Console.WriteLine("num Of Neighbors: " + item.neighbors.Count);
                 foreach (var item2 in item.neighbors)
                 {
-                    Console.WriteLine(item2.name);
+                    //Console.WriteLine(item2.name);
                 }
             }
         }
