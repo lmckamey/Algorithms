@@ -31,36 +31,8 @@ namespace NetworkArchitect
         {
             string[] rawFileInfo = null;
             ParseFileData(ref rawFileInfo);
-            populateMazeInfo(rawFileInfo);
-            PrintMazeInfo();
-            GenerateMaze(0);
-            Console.WriteLine("CURRENT NODES");
-            PrintCurrentMaze();
-
-
-            //for (int i = 0; i < mazeInfo.Count; i++)
-            ////for (int i = 0; i < 1; i++)
-            //{
-            //    List<Node> path = new List<Node>();
-            //    GenerateMaze(i);
-            //    //PrintCurrentMaze();
-            //    List<Node> solution = new List<Node>();
-            //    if (solutions.Count != 0)
-            //    {
-            //        solution = solutions[0];
-            //    }
-            //    foreach (var item in solutions)
-            //    {
-            //        if ((item.Count) < solution.Count)
-            //        {
-            //            solution = item;
-            //        }
-            //    }
-            //    PrintSingeSolution(solution);
-            //    startNode = null;
-            //    endNode = null;
-            //    solutions.Clear();
-            //}
+            PopulateMazeInfo(rawFileInfo);
+            PopulateNodeNeighbors(0);
 
         }
         static string PromptForString(string prompt)
@@ -87,7 +59,7 @@ namespace NetworkArchitect
             return (rawFileStrings != null);
         }
 
-        static void populateMazeInfo(string[] rawFileInfo)
+        static void PopulateMazeInfo(string[] rawFileInfo)
         {
             List<String> info = new List<string>();
             for (int i = 0; i < rawFileInfo.Length; i++)
@@ -103,7 +75,7 @@ namespace NetworkArchitect
                 info.Clear();
             }
         }
-        static void GenerateMaze(int index)
+        static void PopulateNodeNeighbors(int index)
         {
             GenerateNode(mazeInfo[index][0]);
             List<string> tempList = mazeInfo[index];
@@ -164,7 +136,7 @@ namespace NetworkArchitect
                 foreach (var item2 in keys)
                 {
                     Console.Write(item2.name);
-                    Console.WriteLine("Weight: "+item.neighbors[item2]); 
+                    Console.WriteLine(": Weight-"+item.neighbors[item2]); 
                 }
             }
         }
