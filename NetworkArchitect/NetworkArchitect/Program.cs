@@ -15,12 +15,13 @@ namespace NetworkArchitect
             public Dictionary<Node, int> neighbors;
         }
 
+        static string path = "C:/Users/Lucas/Downloads/NetworkInputTest.txt";
+
 
         static List<List<string>> mazeInfo = new List<List<string>>();
         static List<List<Node>> solutions = new List<List<Node>>();
         static List<Node> currentMaze = new List<Node>();
-        static Node endNode;
-        static Node startNode;
+
         static void Main(string[] args)
         {
             Run();
@@ -32,6 +33,9 @@ namespace NetworkArchitect
             ParseFileData(ref rawFileInfo);
             populateMazeInfo(rawFileInfo);
             PrintMazeInfo();
+            GenerateMaze(0);
+            Console.WriteLine("CURRENT NODES");
+            PrintCurrentMaze();
 
 
             //for (int i = 0; i < mazeInfo.Count; i++)
@@ -67,10 +71,10 @@ namespace NetworkArchitect
 
         static bool ParseFileData(ref string[] lines)
         {
-            string path = "";
+            //string path = "";
             while (path == null || path == "")
             {
-                path = PromptForString("Please Enter a file Path");
+                //path = PromptForString("Please Enter a file Path");
             }
             string[] rawFileStrings = File.ReadAllLines(path);
             for (int i = 0; i < rawFileStrings.Length; i++)
@@ -103,28 +107,25 @@ namespace NetworkArchitect
         {
             GenerateNode(mazeInfo[index][0]);
             List<string> tempList = mazeInfo[index];
-            for (int i = 2; i < tempList.Count; i++)
+            for (int i = 1; i < tempList.Count; i++)
             {
-                var query = tempList[i].Where(c => c != ',');
-                var thingy = query.ToList();
-
-                var query2 = currentMaze.Where(n => n.name == thingy[0].ToString());
-                Node first = query2.First();
-
-
+                string[] nodes = tempList[i].Split(',');
                 Dictionary<Node, int> tempNeighbors = new Dictionary<Node, int>();
-                for (int j = 1; j < thingy.Count; j++)
+                var modifiedNode = currentMaze.Where(n => n.name == nodes[0]).First();
+                for (int j = 1; j < nodes.Length; j++)
                 {
-                    var query3 = currentMaze.Where(n => n.name == thingy[j].ToString());
-                    Node first2 = query3.First();
+
+                    string[] tempStrings = nodes[j].Split(':');
+                    int weight = 0;
+                    int.TryParse(tempStrings[1].Trim(), out weight);
+
+                    var neighborNode = currentMaze.Where(n => n.name == tempStrings[0]).First();
+                    tempNeighbors.Add(neighborNode, weight);
+
                 }
-                first.neighbors = tempNeighbors;
+
+                modifiedNode.neighbors = new Dictionary<Node, int>(tempNeighbors);
             }
-
-            var pathQuery = tempList[1].Where(c => c != ',').ToList();
-            startNode = currentMaze.Where(n => n.name == pathQuery[0].ToString()).First();
-            endNode = currentMaze.Where(n => n.name == pathQuery[1].ToString()).First();
-
 
         }
         static void GenerateNode(string nodeInfo)
@@ -155,16 +156,15 @@ namespace NetworkArchitect
         }
         static void PrintCurrentMaze()
         {
-
-            Console.WriteLine("STARTNODE:" + startNode.name);
-            Console.WriteLine("ENDNODE:" + endNode.name);
             foreach (var item in currentMaze)
             {
                 Console.WriteLine("Name: " + item.name);
                 Console.WriteLine("num Of Neighbors: " + item.neighbors.Count);
-                foreach (var item2 in item.neighbors)
+                var keys = item.neighbors.Keys;
+                foreach (var item2 in keys)
                 {
-                    //Console.WriteLine(item2.name);
+                    Console.Write(item2.name);
+                    Console.WriteLine("Weight: "+item.neighbors[item2]); 
                 }
             }
         }
