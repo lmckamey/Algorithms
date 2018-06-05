@@ -12,15 +12,29 @@ namespace NetworkArchitect
         public class Node
         {
             public string name;
-            public Dictionary<Node, int> neighbors;
+            public List<Connection> neighbors;
         }
+        public class Connection
+        {
+            public int weight;
+            public Node baseNode;
+            public Node connectedNode;
+        }
+        public class Graph
+        {
+            public List<Node> nodes = new List<Node>();
+            public List<Connection> connections = new List<Connection>();
+            public List<Connection> mst = new List<Connection>();
+        }
+
 
         static string path = "C:/Users/Lucas/Downloads/NetworkInputTest.txt";
 
 
-        static List<List<string>> mazeInfo = new List<List<string>>();
-        static List<List<Node>> solutions = new List<List<Node>>();
+        static List<List<string>> graphInfo = new List<List<string>>();
         static List<Node> currentMaze = new List<Node>();
+        static List<Graph> graphs = new List<Graph>();
+
 
         static void Main(string[] args)
         {
@@ -31,16 +45,17 @@ namespace NetworkArchitect
         {
             string[] rawFileInfo = null;
             ParseFileData(ref rawFileInfo);
-            PopulateMazeInfo(rawFileInfo);
+            PopulateGraphInfo(rawFileInfo);
             PopulateNodeNeighbors(0);
 
+            CreateGraphs();
+            //PrintGraphs();
         }
         static string PromptForString(string prompt)
         {
             Console.WriteLine(prompt);
             return Console.ReadLine();
         }
-
         static bool ParseFileData(ref string[] lines)
         {
             //string path = "";
@@ -58,8 +73,7 @@ namespace NetworkArchitect
             lines = rawFileStrings;
             return (rawFileStrings != null);
         }
-
-        static void PopulateMazeInfo(string[] rawFileInfo)
+        static void PopulateGraphInfo(string[] rawFileInfo)
         {
             List<String> info = new List<string>();
             for (int i = 0; i < rawFileInfo.Length; i++)
@@ -71,19 +85,19 @@ namespace NetworkArchitect
             }
             if (info.Count != 0)
             {
-                mazeInfo.Add(new List<string>(info));
+                graphInfo.Add(new List<string>(info));
                 info.Clear();
             }
         }
         static void PopulateNodeNeighbors(int index)
         {
-            GenerateNode(mazeInfo[index][0]);
-            List<string> tempList = mazeInfo[index];
+            GenerateNode(graphInfo[index][0]);
+            List<string> tempList = graphInfo[index];
             for (int i = 1; i < tempList.Count; i++)
             {
                 string[] nodes = tempList[i].Split(',');
-                Dictionary<Node, int> tempNeighbors = new Dictionary<Node, int>();
-                var modifiedNode = currentMaze.Where(n => n.name == nodes[0]).First();
+                List<Connection> tempNeighbors = new List<Connection>();
+                var currentNode = currentMaze.Where(n => n.name == nodes[0]).First();
                 for (int j = 1; j < nodes.Length; j++)
                 {
 
@@ -92,11 +106,12 @@ namespace NetworkArchitect
                     int.TryParse(tempStrings[1].Trim(), out weight);
 
                     var neighborNode = currentMaze.Where(n => n.name == tempStrings[0]).First();
-                    tempNeighbors.Add(neighborNode, weight);
 
+                    Connection tempConnection = new Connection() { baseNode = currentNode, connectedNode = neighborNode, weight = weight };
+                    tempNeighbors.Add(tempConnection);
                 }
+                currentNode.neighbors = new List<Connection>(tempNeighbors);
 
-                modifiedNode.neighbors = new Dictionary<Node, int>(tempNeighbors);
             }
 
         }
@@ -107,18 +122,66 @@ namespace NetworkArchitect
             {
                 Node tempNode = new Node();
                 tempNode.name = item;
-                tempNode.neighbors = new Dictionary<Node, int>();
+                tempNode.neighbors = new List<Connection>();
                 currentMaze.Add(tempNode);
+            }
+        }
+        static void CreateGraphs()
+        {
+            List<Node> unusedNodes = new List<Node>(currentMaze);
+            List<Node> usedNodes = new List<Node>();
+
+            while (unusedNodes.Count > 0)
+            {
+                Graph graph = new Graph();
+                Node currentNode = unusedNodes[0];
+                List<Connection> connections = new List<Connection>();
+                TraverseGraph(unusedNodes, usedNodes, currentNode, connections, graph);
+                connections = connections.OrderBy(c => c.weight).ToList();
+                graph.connections = new List<Connection>(connections);
+                foreach (var item in connections)
+                {
+                    Console.WriteLine(item.baseNode.name + ":" + item.connectedNode.name + " = " + item.weight);
+                }
+                Console.WriteLine();
+                graphs.Add(graph);
+            }
+
+        }
+        static void TraverseGraph(List<Node> unusedNodes, List<Node> usedNodes, Node currentNode, List<Connection> connectionList, Graph graph)
+        {
+            if (!usedNodes.Contains(currentNode))
+            {
+                unusedNodes.Remove(currentNode);
+                usedNodes.Add(currentNode);
+
+                graph.nodes.Add(currentNode);
+                for (int i = 0; i < currentNode.neighbors.Count; i++)
+                {
+                    TraverseGraph(unusedNodes, usedNodes, currentNode.neighbors[i].connectedNode, connectionList, graph);
+                    Connection tempConnect = new Connection() { baseNode = currentNode, connectedNode = currentNode.neighbors[i].connectedNode, weight = currentNode.neighbors[i].weight };
+                    var query = connectionList.Where(c => c.baseNode == tempConnect.connectedNode && c.connectedNode == tempConnect.baseNode && c.weight == tempConnect.weight);
+                    var result = query.ToList();
+                    if (result.Count == 0)
+                        connectionList.Add(tempConnect);
+                }
+            }
+        }
+        static void FindMSTs()
+        {
+            for (int i = 0; i < graphs.Count; i++)
+            {
+
             }
         }
 
         static void PrintMazeInfo()
         {
 
-            for (int i = 0; i < mazeInfo.Count; i++)
+            for (int i = 0; i < graphInfo.Count; i++)
             {
                 Console.WriteLine("MAZEINFO " + i + ":");
-                foreach (var item in mazeInfo[i])
+                foreach (var item in graphInfo[i])
                 {
                     Console.WriteLine(item);
                 }
@@ -126,49 +189,29 @@ namespace NetworkArchitect
                 Console.WriteLine();
             }
         }
-        static void PrintCurrentMaze()
+        static void PrintListOfNodes()
         {
             foreach (var item in currentMaze)
             {
                 Console.WriteLine("Name: " + item.name);
                 Console.WriteLine("num Of Neighbors: " + item.neighbors.Count);
-                var keys = item.neighbors.Keys;
-                foreach (var item2 in keys)
+                foreach (var item2 in item.neighbors)
                 {
-                    Console.Write(item2.name);
-                    Console.WriteLine(": Weight-"+item.neighbors[item2]); 
+                    Console.WriteLine(item2.connectedNode.name + ": " + item2.weight);
                 }
             }
         }
 
-        static void PrintSolutions()
+        static void PrintGraphs()
         {
-            for (int i = 0; i < solutions.Count; i++)
+            for (int i = 0; i < graphs.Count; i++)
             {
-                Console.WriteLine("SOLUTION " + i + ":");
-                foreach (var item in solutions[i])
+                Console.WriteLine("GRAPH" + i + ": ");
+                for (int j = 0; j < graphs[i].nodes.Count; j++)
                 {
-                    Console.Write(item.name + ",");
+                    Console.WriteLine(graphs[i].nodes[j].name);
                 }
-                Console.WriteLine();
-            }
-        }
 
-        static void PrintSingeSolution(List<Node> solution)
-        {
-            Console.WriteLine("SOLUTION ");
-            if (solution.Count != 0)
-            {
-                for (int i = 0; i < solution.Count - 1; i++)
-                {
-                    Console.Write(solution[i].name + ",");
-                }
-                Console.Write(solution[solution.Count - 1].name);
-                Console.WriteLine();
-            }
-            else
-            {
-                Console.WriteLine("Maze Cannot Be Solved");
             }
         }
 
