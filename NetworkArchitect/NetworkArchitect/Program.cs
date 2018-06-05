@@ -49,6 +49,7 @@ namespace NetworkArchitect
             PopulateNodeNeighbors(0);
 
             CreateGraphs();
+            FindMSTs();
             //PrintGraphs();
         }
         static string PromptForString(string prompt)
@@ -171,8 +172,28 @@ namespace NetworkArchitect
         {
             for (int i = 0; i < graphs.Count; i++)
             {
-
+                List<Connection> tempConnections = new List<Connection>();
+                for (int j = 0; j < graphs[i].connections.Count; j++)
+                {
+                    if (!willCreateLoop(tempConnections, graphs[i].connections[j]))
+                    {
+                        tempConnections.Add(graphs[i].connections[j]);
+                    }
+                }
+                graphs[i].mst = new List<Connection>(tempConnections);
+                Console.WriteLine("MST:\n");
+                foreach (var item in graphs[i].mst)
+                {
+                    Console.WriteLine(item.baseNode.name + ":" + item.connectedNode.name + " = " + item.weight);
+                }
             }
+        }
+
+        static bool willCreateLoop(List<Connection> previousConections, Connection newConnection)
+        {
+            Node node1 = newConnection.baseNode;
+            Node node2 = newConnection.connectedNode;
+
         }
 
         static void PrintMazeInfo()
