@@ -25,10 +25,11 @@ namespace NetworkArchitect
             public List<Node> nodes = new List<Node>();
             public List<Connection> connections = new List<Connection>();
             public List<Connection> mst = new List<Connection>();
+            public Node optimalHubPlacement = new Node();
         }
 
 
-        static string path = "C:/Users/Lucas/Downloads/NetworkInputTest.txt";
+        //static string path = "C:/Users/Lucas/Downloads/NetworkInputTest.txt";
 
 
         static List<List<string>> graphInfo = new List<List<string>>();
@@ -50,7 +51,7 @@ namespace NetworkArchitect
 
             CreateGraphs();
             FindMSTs();
-            //PrintGraphs();
+            PrintFinal();
         }
         static string PromptForString(string prompt)
         {
@@ -59,10 +60,10 @@ namespace NetworkArchitect
         }
         static bool ParseFileData(ref string[] lines)
         {
-            //string path = "";
+            string path = "";
             while (path == null || path == "")
             {
-                //path = PromptForString("Please Enter a file Path");
+                path = PromptForString("Please Enter a file Path");
             }
             string[] rawFileStrings = File.ReadAllLines(path);
             for (int i = 0; i < rawFileStrings.Length; i++)
@@ -140,11 +141,6 @@ namespace NetworkArchitect
                 TraverseGraph(unusedNodes, usedNodes, currentNode, connections, graph);
                 connections = connections.OrderBy(c => c.weight).ToList();
                 graph.connections = new List<Connection>(connections);
-                foreach (var item in connections)
-                {
-                    Console.WriteLine(item.baseNode.name + ":" + item.connectedNode.name + " = " + item.weight);
-                }
-                Console.WriteLine();
                 graphs.Add(graph);
             }
 
@@ -175,25 +171,72 @@ namespace NetworkArchitect
                 List<Connection> tempConnections = new List<Connection>();
                 for (int j = 0; j < graphs[i].connections.Count; j++)
                 {
-                    if (!willCreateLoop(tempConnections, graphs[i].connections[j]))
+                    if (!WillCreateLoop(tempConnections, graphs[i].connections[j]))
                     {
                         tempConnections.Add(graphs[i].connections[j]);
                     }
                 }
                 graphs[i].mst = new List<Connection>(tempConnections);
-                Console.WriteLine("MST:\n");
-                foreach (var item in graphs[i].mst)
-                {
-                    Console.WriteLine(item.baseNode.name + ":" + item.connectedNode.name + " = " + item.weight);
-                }
+            }
+        }
+        static bool WillCreateLoop(List<Connection> previousConections, Connection newConnection)
+        {
+            if (previousConections.Count == 0)
+                return false;
+            List<Node> nodesInMST = new List<Node>();
+            foreach (var item in previousConections)
+            {
+                nodesInMST.Add(item.baseNode);
+                nodesInMST.Add(item.connectedNode);
+            }
+            if (!nodesInMST.Contains(newConnection.baseNode) && nodesInMST.Contains(newConnection.connectedNode))
+                return false;
+            if (!nodesInMST.Contains(newConnection.baseNode) || nodesInMST.Contains(newConnection.connectedNode))
+            {
+
+            }
+            return true;
+
+        }
+
+        static void FindOPtimalHUB()
+        {
+            foreach (var item in graphs)
+            {
+
             }
         }
 
-        static bool willCreateLoop(List<Connection> previousConections, Connection newConnection)
+        static void PrintFinal()
         {
-            Node node1 = newConnection.baseNode;
-            Node node2 = newConnection.connectedNode;
+            int totalLengthNeeded = 0;
+            for (int i = 0; i < graphs.Count; i++)
+            {
+                List<Node> nodesInMST = new List<Node>();
+                int lengthNeeded = 0;
+                foreach (var item in graphs[i].mst)
+                {
+                    if (!nodesInMST.Contains(item.baseNode))
+                        nodesInMST.Add(item.baseNode);
+                    if (!nodesInMST.Contains(item.connectedNode))
+                        nodesInMST.Add(item.connectedNode);
+                    lengthNeeded += item.weight;
+                    totalLengthNeeded += item.weight;
+                }
+                int num = i + 1;
+                Console.WriteLine("MST" + num + ":");
+                Console.Write("Socket Set: ");
+                for (int j = 0; j < nodesInMST.Count-1; j++)
+                {
+                    Console.Write(nodesInMST[j].name + ",");
+                }
+                Console.Write(nodesInMST[nodesInMST.Count- 1].name);
+                Console.WriteLine("\nCable Needed: " + lengthNeeded+ "ft");
+                Console.WriteLine("Optimal Hub Placement: " + graphs[i].optimalHubPlacement.name);
+                Console.WriteLine();
+            }
 
+            Console.WriteLine("Total Cable Needed: " + totalLengthNeeded+ "ft");
         }
 
         static void PrintMazeInfo()

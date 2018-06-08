@@ -425,7 +425,7 @@ namespace Test
 
             Assert.AreEqual(4, num);
         }
-        
+
         [TestMethod]
         public void BSTDeleteLeaf()
         {
@@ -444,7 +444,7 @@ namespace Test
             tree.Remove(60);
             Assert.AreEqual("1, 10, 12, 13, 15, 20, 145", tree.InOrder());
         }
-                
+
         [TestMethod]
         public void BSTDeleteWithTwoBranches()
         {
@@ -464,7 +464,7 @@ namespace Test
             Assert.AreEqual("1, 12, 13, 15, 20, 60, 145", tree.InOrder());
         }
 
-                          
+
         [TestMethod]
         public void BSTDeleteWithOneBranch()
         {
@@ -484,7 +484,7 @@ namespace Test
             Assert.AreEqual("1, 10, 12, 13, 15, 60, 145", tree.InOrder());
         }
 
-                        
+
         [TestMethod]
         public void BSTDeleteRoot()
         {
@@ -516,7 +516,7 @@ namespace Test
 
             Assert.AreEqual(1, num);
         }
-        
+
         [TestMethod]
         public void BSTHeightOf0()
         {
@@ -599,6 +599,230 @@ namespace Test
 
             Assert.AreEqual("3, 7, 8, 10, 11, 12, ", thingy);
         }
+    }
+    [TestClass]
+    public class PriorityQueueUnitTest
+    {
+        #region Tests
+
+        [TestMethod]
+        public void PriorotyQueue_MethodsExist()
+        {
+            MaxHeapPriorityQueue pq = new MaxHeapPriorityQueue();
+            pq.Enqueue(10, 1);
+            pq.Dequeue();
+            pq.Peek();
+            pq.ToSortedArray();
+            pq.ToString();
+            int num = pq.Count;
+            Assert.IsNotNull(pq);
+        }
+        [TestMethod]
+        public void PriorotyQueue_HeapDoublesInSize()
+        {
+            MaxHeapPriorityQueue pq = new MaxHeapPriorityQueue();
+            for (int i = 0; i < 11; i++)
+            {
+                pq.Enqueue(10, i);
+            }
+
+            Assert.AreEqual(20, pq.GetHeapSize());
+
+        }
+        [TestMethod]
+        public void PriorotyQueue_CountIsCorrectAfterSingleAdd()
+        {
+            MaxHeapPriorityQueue pq = new MaxHeapPriorityQueue();
+            pq.Enqueue(10, 1);
+
+            Assert.AreEqual(1, pq.Count);
+
+        }
+        [TestMethod]
+        public void PriorotyQueue_CountIsCorrectAfterSingleRemove()
+        {
+            MaxHeapPriorityQueue pq = new MaxHeapPriorityQueue();
+            pq.Enqueue(10, 1);
+            pq.Dequeue();
+
+            Assert.AreEqual(0, pq.Count);
+        }
+        [TestMethod]
+        public void PriorotyQueue_CountIsCorrectAfterAddRemoveAdd()
+        {
+            MaxHeapPriorityQueue pq = new MaxHeapPriorityQueue();
+            pq.Enqueue(10, 1);
+            pq.Dequeue();
+            pq.Enqueue(10, 1);
+
+            Assert.AreEqual(1, pq.Count);
+        }
+        [TestMethod]
+        public void PriorotyQueue_CountIsUnchagedAfterPeek()
+        {
+            MaxHeapPriorityQueue pq = new MaxHeapPriorityQueue();
+            pq.Enqueue(10, 1);
+
+            PQNode peek = pq.Peek();
+
+            Assert.AreEqual(1, pq.Count);
+        }
+        [TestMethod]
+        public void PriorotyQueue_CountIsZeroForNewPQ()
+        {
+            MaxHeapPriorityQueue pq = new MaxHeapPriorityQueue();
+
+            Assert.AreEqual(0, pq.Count);
+        }
+        //Dequeue
+        [TestMethod]
+        public void PriorotyQueue_DequeueSingleNodePQ()
+        {
+            MaxHeapPriorityQueue pq = new MaxHeapPriorityQueue();
+
+            for (int i = 0; i < 5; i++)
+            {
+                pq.Enqueue(i * 10, i);
+            }
+
+            PQNode dequeueNode = pq.Dequeue();
+
+            Assert.AreEqual(40, dequeueNode.Priority);
+        }
+        [TestMethod]
+        public void PriorotyQueue_DequeueFullTreeToEmpty()
+        {
+            MaxHeapPriorityQueue pq = new MaxHeapPriorityQueue();
+
+            for (int i = 0; i < 13; i++)
+            {
+                pq.Enqueue(i * 10, i);
+            }
+
+            for (int i = 0; i < 16; i++)
+            {
+                pq.Dequeue();
+            }
+            Assert.AreEqual(0, pq.Count);
+            Assert.AreEqual("", pq.ToString());
+
+        }
+
+        [TestMethod]
+        public void DequeueFullTreeToEmpty()
+        {
+            MaxHeapPriorityQueue pq = CreateThirteenNodePQDescending();
+            for (int i = 0; i < 13; i++)
+            {
+                pq.Dequeue();
+            }
+
+            int expectedCount = 0;
+            int actualCount = pq.Count;
+            string expectedString = "";
+            string actualString = pq.ToString();
+
+            Assert.AreEqual(expectedCount, actualCount);
+            Assert.AreEqual(expectedString, actualString);
+        }
+
+        private MaxHeapPriorityQueue CreateThirteenNodePQDescending()
+        {
+            MaxHeapPriorityQueue pq = new MaxHeapPriorityQueue();
+            pq.Enqueue(13, 10);
+            pq.Enqueue(12, 20);
+            pq.Enqueue(11, 30);
+            pq.Enqueue(10, 40);
+            pq.Enqueue(9, 50);
+            pq.Enqueue(8, 60);
+            pq.Enqueue(7, 70);
+            pq.Enqueue(6, 80);
+            pq.Enqueue(5, 90);
+            pq.Enqueue(4, 100);
+            pq.Enqueue(3, 110);
+            pq.Enqueue(2, 120);
+            pq.Enqueue(1, 130);
+
+            return pq;
+        }
+        //Peek
+        [TestMethod]
+        public void PriorotyQueue_PeekSingleNodePQ()
+        {
+            MaxHeapPriorityQueue pq = new MaxHeapPriorityQueue();
+
+            pq.Enqueue(0, 0);
+
+            Assert.AreEqual(0, pq.Peek().Priority);
+        }
+        [TestMethod]
+        public void PriorotyQueue_PeekThreeNodePQ()
+        {
+            MaxHeapPriorityQueue pq = new MaxHeapPriorityQueue();
+            for (int i = 0; i < 3; i++)
+            {
+                pq.Enqueue(i * 10, i);
+            }
+
+            Assert.AreEqual(20, pq.Peek().Priority);
+        }
+        [TestMethod]
+        public void PriorotyQueue_PeekThirteenNodePQ()
+        {
+            MaxHeapPriorityQueue pq = new MaxHeapPriorityQueue();
+            for (int i = 0; i < 13; i++)
+            {
+                pq.Enqueue(i * 10, i);
+            }
+
+            Assert.AreEqual(120, pq.Peek().Priority);
+        }
+        //ToString
+        [TestMethod]
+        public void PriorotyQueue_ToStringSingleNodePQ()
+        {
+            MaxHeapPriorityQueue pq = new MaxHeapPriorityQueue();
+            pq.Enqueue(0, 0);
+
+            Assert.AreEqual("0:0", pq.ToString());
+        }
+
+        [TestMethod]
+        public void PriorotyQueue_ToStringFourNodesPQ()
+        {
+            MaxHeapPriorityQueue pq = new MaxHeapPriorityQueue();
+            pq.Enqueue(0, 0);
+            pq.Enqueue(10, 0);
+            pq.Enqueue(20, 0);
+            pq.Enqueue(30, 0);
+
+            Assert.AreEqual("30:0, 20:0, 10:0, 0:0", pq.ToString());
+        }
+
+
+        //ToSortedArray
+
+
+        [TestMethod]
+        public void PriorotyQueue_ToSortedArrayFourNodes()
+        {
+            MaxHeapPriorityQueue pq = new MaxHeapPriorityQueue();
+            pq.Enqueue(0, 0);
+            pq.Enqueue(10, 0);
+            pq.Enqueue(20, 0);
+            pq.Enqueue(30, 0);
+
+            PQNode[] array = pq.ToSortedArray();
+            string str = "";
+            foreach (var item in array)
+            {
+                str += item.Priority + ":" + item.Value+  ", ";
+            }
+
+            Assert.AreEqual("30:0, 20:0, 10:0, 0:0, ", str);
+        }
+
+        #endregion
     }
 
 }

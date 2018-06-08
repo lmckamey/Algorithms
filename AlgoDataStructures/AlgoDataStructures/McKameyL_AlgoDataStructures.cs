@@ -438,7 +438,7 @@ namespace AlgoDataStructures
                 Count--;
             }
         }
-        
+
         public void Clear()
         {
             m_Root = null;
@@ -490,7 +490,7 @@ namespace AlgoDataStructures
             if (node == null)
                 return node;
             //Leaf Case
-            if(node.LeftBranch == null &&  node.RightBranch == null && node.Value.Equals(value))
+            if (node.LeftBranch == null && node.RightBranch == null && node.Value.Equals(value))
             {
                 node = null;
                 return node;
@@ -645,6 +645,122 @@ namespace AlgoDataStructures
             else
                 str += node.Value + ", ";
             return str;
+        }
+
+    }
+    public class PQNode
+    {
+        public int Value { get; set; }
+        public int Priority { get; set; }
+    }
+
+    public class MaxHeapPriorityQueue
+    {
+        private PQNode[] heap = new PQNode[10];
+        public int Count { get; private set; }
+        public int GetHeapSize()
+        {
+            return heap.Length;
+        }
+        public PQNode Peek()
+        {
+            return heap[1];
+        }
+        public void Enqueue(int priority, int value)
+        {
+            Count++;
+            if (Count > heap.Length - 1)
+            {
+                PQNode[] tempHeap = new PQNode[heap.Length * 2];
+                heap.CopyTo(tempHeap, 0);
+                heap = tempHeap;
+            }
+            PQNode tempNode = new PQNode() { Value = value, Priority = priority };
+            heap[Count] = tempNode;
+
+            HeapifiyNodeUp(Count);
+        }
+
+        public void HeapifiyNodeUp(int index)
+        {
+            PQNode parent = heap[index / 2];
+            if (parent != null && heap[index].Priority > parent.Priority)
+            {
+                //swap parent with node
+                heap[index / 2] = heap[index];
+                heap[index] = parent;
+                if (index / 2 != 0)
+                    HeapifiyNodeUp(index / 2);
+            }
+        }
+        public void HeapifiyNodeDown(int index)
+        {
+            int tempIndex;
+            if (index * 2 + 1 < heap.Length)
+            {
+                if (heap[index * 2 + 1] != null)
+                {
+                    tempIndex = heap[index * 2].Priority > heap[index * 2 + 1].Priority ? index * 2 : index * 2 + 1;
+                }
+                else
+                {
+                    tempIndex = index * 2;
+                }
+                if (heap[tempIndex] != null)
+                {
+                    if (heap[index].Priority < heap[tempIndex].Priority)
+                    {
+                        //swap nodes
+                        PQNode tempNode = heap[index];
+                        heap[index] = heap[tempIndex];
+                        heap[tempIndex] = tempNode;
+                        HeapifiyNodeDown(tempIndex);
+                    }
+                }
+            }
+        }
+
+        public PQNode Dequeue()
+        {
+            PQNode tempNode = null;
+            if (Count >= 1)
+            {
+                tempNode = heap[1];
+                heap[1] = heap[Count];
+                heap[Count] = null;
+                Count--;
+                HeapifiyNodeDown(1);
+            }
+
+            return tempNode;
+        }
+
+        public override string ToString()
+        {
+            string str = "";
+            if (Count >= 1)
+            {
+                str += heap[1].Priority + ":" + heap[1].Value;
+                for (int i = 2; i < Count; i++)
+                {
+                    str += ", " + heap[i].Priority + ":" + heap[i].Value;
+                }
+                if (Count > 1)
+                    str += ", " + heap[Count].Priority + ":" + heap[Count].Value;
+            }
+            return str;
+        }
+
+        public PQNode[] ToSortedArray()
+        {
+            PQNode[] array = new PQNode[Count];
+            int i = 0;
+            while (Count > 0)
+            {
+                array[i] = Dequeue();
+                i++;
+            }
+            return array;
         }
 
     }
